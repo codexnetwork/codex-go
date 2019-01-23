@@ -1,6 +1,10 @@
 package main
 
 import (
+	"flag"
+
+	"github.com/fanyang1988/force-go/config"
+
 	"github.com/fanyang1988/force-go/common"
 
 	"encoding/json"
@@ -9,9 +13,15 @@ import (
 	"github.com/cihub/seelog"
 )
 
+var configPath = flag.String("cfg", "../config.json", "confg file path")
+
 func main() {
 	defer seelog.Flush()
-	api := common.NewAPI("http://127.0.0.1:8001")
+	flag.Parse()
+
+	config.Load(*configPath)
+
+	api := common.NewAPI(config.Data.URL)
 	info, err := api.GetInfo()
 	if err != nil {
 		seelog.Errorf("get api err by %s", err.Error())

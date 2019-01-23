@@ -1,0 +1,9 @@
+{
+    "url":"http://127.0.0.1:8001",
+    "keys":[
+        {"name":"eosforce", "key":"5JHJtvn7RkyhK7FnSRkmZ5LEReQUw9V6FpsCNDrdGcrFSAwPNtM"},
+        {"name":"testa", "key":"5JHJtvn7RkyhK7FnSRkmZ5LEReQUw9V6FpsCNDrdGcrFSAwPNtM"},
+        {"name":"testb", "key":"5JHJtvn7RkyhK7FnSRkmZ5LEReQUw9V6FpsCNDrdGcrFSAwPNtM"},
+        {"name":"testc", "key":"5JHJtvn7RkyhK7FnSRkmZ5LEReQUw9V6FpsCNDrdGcrFSAwPNtM"}
+    ]
+}
