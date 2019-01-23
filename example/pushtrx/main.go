@@ -5,6 +5,8 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/eosforce/goeosforce/ecc"
+
 	"github.com/cihub/seelog"
 	eos "github.com/eosforce/goeosforce"
 	"github.com/fanyang1988/force-go/common"
@@ -18,6 +20,10 @@ type transfer struct {
 	To       eos.AccountName `json:"to"`
 	Quantity eos.Asset       `json:"quantity"`
 	Memo     string          `json:"memo"`
+}
+
+func init() {
+	ecc.PublicKeyPrefixCompat = "FOSC"
 }
 
 func main() {

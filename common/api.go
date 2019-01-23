@@ -14,8 +14,10 @@ type API struct {
 // NewAPI create api to apiURL
 func NewAPI(apiURL string) *API {
 	api := eos.New(apiURL)
-	return &API{
+	res := &API{
 		api,
 		config.Cfg,
 	}
+	res.SetSigner(NewConfigSigner(res))
+	return res
 }

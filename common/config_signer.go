@@ -20,7 +20,12 @@ func NewConfigSigner(api *API) *ConfigSigner {
 		Keys: make([]*ecc.PrivateKey, 0),
 		api:  api,
 	}
-
+	for _, k := range api.Cfg.Keys {
+		res.Keys = append(res.Keys, &k.PriKey)
+	}
+	for _, k := range api.Cfg.Prikeys {
+		res.Keys = append(res.Keys, &k)
+	}
 	return res
 }
 
