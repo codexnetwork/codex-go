@@ -6,20 +6,30 @@ import (
 	"github.com/eosforce/goeosforce/ecc"
 )
 
-// Config config to force-go
 type configDatas struct {
-	URL  string           `json:"url"`
-	Keys []accountKeyData `json:"keys"`
+	ChainID string           `json:"chainid"`
+	URL     string           `json:"url"`
+	Keys    []accountKeyData `json:"keys"`
+}
+
+// Config config to force-go
+type Config struct {
+	ChainID eos.SHA256Bytes
+	URL     string
+	keys    map[string]accountKey
 }
 
 // Data config data for force-go
 var Data configDatas
 
-var keys map[string]accountKey
+// Cfg parsed Data to cfg
+var Cfg Config
 
-func parse() {
+// Parse parse cfg from data
+func (c *Config) Parse(data *configDatas) {
 	// keys
-	for _, k := range Data.Keys {
+	c.keys = make(map[string]accountKey, 64)
+	for _, k := range data.Keys {
 		pk, err := ecc.NewPrivateKey(k.PriKey)
 		if err != nil {
 			panic(err)
@@ -30,8 +40,16 @@ func parse() {
 		}
 		n.PubKey = n.PriKey.PublicKey()
 
+		c.keys[k.PriKey] = n
 		seelog.Debugf("load account key %s -> %s", n.Name, n.PubKey)
 	}
+
+	//chainID
+	id, err := ToSHA256Bytes(data.ChainID)
+	if err != nil {
+		panic(err)
+	}
+	c.ChainID = id
 }
 
 // Load load cfg to Cfg
@@ -41,5 +59,5 @@ func Load(path string) {
 		seelog.Errorf("load %s cfg err by %s", path, err.Error())
 		panic(err)
 	}
-	parse()
+	Cfg.Parse(&Data)
 }
