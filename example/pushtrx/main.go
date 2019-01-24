@@ -76,7 +76,7 @@ func main() {
 		}),
 	}
 
-	err = common.PushActions(api, testAction)
+	_, err = common.PushActions(api, testAction)
 	if err != nil {
 		seelog.Errorf("push action err by %s", err.Error())
 		return
