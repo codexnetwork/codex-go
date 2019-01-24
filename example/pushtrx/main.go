@@ -1,16 +1,13 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
-	"fmt"
 
 	"github.com/eosforce/goeosforce/ecc"
 
 	"github.com/cihub/seelog"
 	eos "github.com/eosforce/goeosforce"
-	"github.com/fanyang1988/force-go/common"
-	"github.com/fanyang1988/force-go/config"
+	force "github.com/fanyang1988/force-go"
 )
 
 var configPath = flag.String("cfg", "../config.json", "confg file path")
@@ -30,31 +27,7 @@ func main() {
 	defer seelog.Flush()
 	flag.Parse()
 
-	cfg, err := config.LoadCfgFromFile(*configPath)
-	if err != nil {
-		seelog.Errorf("load cfg err by %s", err.Error())
-		return
-	}
-
-	api, err := common.NewAPI(cfg)
-	if err != nil {
-		seelog.Errorf("create api err by %s", err.Error())
-		return
-	}
-
-	info, err := api.GetInfo()
-	if err != nil {
-		seelog.Errorf("get api err by %s", err.Error())
-		return
-	}
-
-	data, err := json.MarshalIndent(info, "", "  ")
-	if err != nil {
-		seelog.Errorf("MarshalIndent err by %s", err.Error())
-		return
-	}
-
-	fmt.Println(string(data))
+	client, err := force.NewClientFromFile(*configPath)
 
 	q, err := eos.NewAsset("1000.0000 SYS")
 	if err != nil {
@@ -62,7 +35,7 @@ func main() {
 		return
 	}
 
-	testAction := &eos.Action{
+	_, err = client.PushActions(&eos.Action{
 		Account: eos.AN("force.token"),
 		Name:    eos.ActN("transfer"),
 		Authorization: []eos.PermissionLevel{
@@ -74,9 +47,8 @@ func main() {
 			Quantity: q,
 			Memo:     "test transfer",
 		}),
-	}
+	})
 
-	_, err = common.PushActions(api, testAction)
 	if err != nil {
 		seelog.Errorf("push action err by %s", err.Error())
 		return
