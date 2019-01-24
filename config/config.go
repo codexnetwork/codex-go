@@ -4,6 +4,7 @@ import (
 	"github.com/cihub/seelog"
 	eos "github.com/eosforce/goeosforce"
 	"github.com/eosforce/goeosforce/ecc"
+	"github.com/pkg/errors"
 )
 
 type configDatas struct {
@@ -27,14 +28,34 @@ var Data configDatas
 // Cfg parsed Data to cfg
 var Cfg Config
 
+// LoadCfgFromFile load cfg from file
+func LoadCfgFromFile(path string) (*Config, error) {
+	var data configDatas
+	err := LoadJSONFile(path, &data)
+	if err != nil {
+		return nil, errors.Wrapf(err, "load %s err", path)
+	}
+
+	res := &Config{
+		URL: data.URL,
+	}
+
+	err = res.Parse(&data)
+	if err != nil {
+		return nil, errors.Wrapf(err, "parse %s err", path)
+	}
+
+	return res, nil
+}
+
 // Parse parse cfg from data
-func (c *Config) Parse(data *configDatas) {
+func (c *Config) Parse(data *configDatas) error {
 	// keys
 	c.Keys = make(map[string]accountKey, 64)
 	for _, k := range data.Keys {
 		pk, err := ecc.NewPrivateKey(k.PriKey)
 		if err != nil {
-			panic(err)
+			return errors.Wrapf(err, "parse account pri keys map err")
 		}
 		n := accountKey{
 			Name:   eos.AN(k.Name),
@@ -50,7 +71,7 @@ func (c *Config) Parse(data *configDatas) {
 	for _, k := range data.PriKeys {
 		pk, err := ecc.NewPrivateKey(k)
 		if err != nil {
-			panic(err)
+			return errors.Wrapf(err, "parse prikey err")
 		}
 		c.Prikeys = append(c.Prikeys, *pk)
 		seelog.Debugf("load key %s", pk.PublicKey())
@@ -59,9 +80,11 @@ func (c *Config) Parse(data *configDatas) {
 	//chainID
 	id, err := ToSHA256Bytes(data.ChainID)
 	if err != nil {
-		panic(err)
+		return errors.Wrapf(err, "parse chainid err")
 	}
 	c.ChainID = id
+
+	return nil
 }
 
 // Load load cfg to Cfg
