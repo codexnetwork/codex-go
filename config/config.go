@@ -22,12 +22,6 @@ type Config struct {
 	Prikeys []ecc.PrivateKey
 }
 
-// Data config data for force-go
-var Data configDatas
-
-// Cfg parsed Data to cfg
-var Cfg Config
-
 // LoadCfgFromFile load cfg from file
 func LoadCfgFromFile(path string) (*Config, error) {
 	var data configDatas
@@ -85,14 +79,4 @@ func (c *Config) Parse(data *configDatas) error {
 	c.ChainID = id
 
 	return nil
-}
-
-// Load load cfg to Cfg
-func Load(path string) {
-	err := LoadJSONFile(path, &Data)
-	if err != nil {
-		seelog.Errorf("load %s cfg err by %s", path, err.Error())
-		panic(err)
-	}
-	Cfg.Parse(&Data)
 }

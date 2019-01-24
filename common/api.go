@@ -12,11 +12,11 @@ type API struct {
 }
 
 // NewAPI create api to apiURL
-func NewAPI(apiURL string) *API {
-	api := eos.New(apiURL)
+func NewAPI(cfg *config.Config) *API {
+	api := eos.New(cfg.URL)
 	res := &API{
 		api,
-		config.Cfg,
+		*cfg,
 	}
 	res.SetSigner(NewConfigSigner(res))
 	return res

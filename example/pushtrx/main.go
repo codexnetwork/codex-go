@@ -30,9 +30,13 @@ func main() {
 	defer seelog.Flush()
 	flag.Parse()
 
-	config.Load(*configPath)
+	cfg, err := config.LoadCfgFromFile(*configPath)
+	if err != nil {
+		seelog.Errorf("load cfg err by %s", err.Error())
+		return
+	}
 
-	api := common.NewAPI(config.Data.URL)
+	api := common.NewAPI(cfg)
 	info, err := api.GetInfo()
 	if err != nil {
 		seelog.Errorf("get api err by %s", err.Error())
