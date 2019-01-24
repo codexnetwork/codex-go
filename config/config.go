@@ -72,11 +72,15 @@ func (c *Config) Parse(data *configDatas) error {
 	}
 
 	//chainID
-	id, err := ToSHA256Bytes(data.ChainID)
-	if err != nil {
-		return errors.Wrapf(err, "parse chainid err")
+	if data.ChainID != "" {
+		id, err := ToSHA256Bytes(data.ChainID)
+		if err != nil {
+			return errors.Wrapf(err, "parse chainid err")
+		}
+		c.ChainID = id
+	} else {
+		c.ChainID = nil
 	}
-	c.ChainID = id
 
 	return nil
 }

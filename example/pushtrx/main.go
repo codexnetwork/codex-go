@@ -36,7 +36,12 @@ func main() {
 		return
 	}
 
-	api := common.NewAPI(cfg)
+	api, err := common.NewAPI(cfg)
+	if err != nil {
+		seelog.Errorf("create api err by %s", err.Error())
+		return
+	}
+
 	info, err := api.GetInfo()
 	if err != nil {
 		seelog.Errorf("get api err by %s", err.Error())
