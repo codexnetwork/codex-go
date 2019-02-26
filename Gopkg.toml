@@ -31,7 +31,6 @@
 
 [[constraint]]
   name = "github.com/eosforce/goeosforce"
-  source = "github.com/eosforce/goeosforce"
   branch = "forceio"
 
 [[constraint]]
