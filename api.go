@@ -1,7 +1,7 @@
 package force
 
 import (
-	eos "github.com/eosforce/goeosforce"
+	"github.com/eosforce/goeosforce"
 	"github.com/fanyang1988/force-go/common"
 )
 
@@ -13,4 +13,29 @@ func (c *Client) PushAction(action *eos.Action) (*eos.PushTransactionFullResp, e
 // PushActions push actions to chain
 func (c *Client) PushActions(actions ...*eos.Action) (*eos.PushTransactionFullResp, error) {
 	return common.PushActions(c.api, actions...)
+}
+
+// GetTable get table from chain
+func (c *Client) GetTable() error {
+	return nil
+}
+
+// GetInfo get info
+func (c *Client) GetInfo() (out *eos.InfoResp, err error) {
+	return c.api.GetInfo()
+}
+
+// GetBlockByID get block by id
+func (c *Client) GetBlockByID(id string) (out *eos.BlockResp, err error) {
+	return c.api.GetBlockByID(id)
+}
+
+// GetBlockByNum get block by num
+func (c *Client) GetBlockByNum(num uint32) (out *eos.BlockResp, err error) {
+	return c.api.GetBlockByNum(num)
+}
+
+// GetTableRows get table
+func (c *Client) GetTableRows(params eos.GetTableRowsRequest) (out *eos.GetTableRowsResp, err error) {
+	return c.api.GetTableRows(params)
 }
