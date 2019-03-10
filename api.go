@@ -15,11 +15,6 @@ func (c *Client) PushActions(actions ...*eos.Action) (*eos.PushTransactionFullRe
 	return common.PushActions(c.api, actions...)
 }
 
-// GetTable get table from chain
-func (c *Client) GetTable() error {
-	return nil
-}
-
 // GetInfo get info
 func (c *Client) GetInfo() (out *eos.InfoResp, err error) {
 	return c.api.GetInfo()

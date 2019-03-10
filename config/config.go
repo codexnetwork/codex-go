@@ -20,6 +20,7 @@ type Config struct {
 	URL     string
 	Keys    map[string]accountKey
 	Prikeys []ecc.PrivateKey
+	IsDebug bool
 }
 
 // LoadCfgFromFile load cfg from file

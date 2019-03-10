@@ -15,6 +15,7 @@ type API struct {
 // NewAPI create api to apiURL
 func NewAPI(cfg *config.Config) (*API, error) {
 	api := eos.New(cfg.URL)
+	api.Debug = cfg.IsDebug
 	res := &API{
 		api,
 		*cfg,
