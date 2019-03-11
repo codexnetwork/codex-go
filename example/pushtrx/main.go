@@ -22,6 +22,10 @@ func main() {
 	flag.Parse()
 
 	client, err := force.NewClientFromFile(*configPath)
+	if err != nil{
+		seelog.Errorf("new client err by %s", err.Error())
+		return
+	}
 
 	q, err := eos.NewAsset("1000.0000 SYS")
 	if err != nil {
