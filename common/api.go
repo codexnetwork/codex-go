@@ -1,7 +1,7 @@
 package common
 
 import (
-	eos "github.com/eosforce/goeosforce"
+	eos "github.com/eosforce/goforceio"
 	"github.com/fanyang1988/force-go/config"
 	"github.com/pkg/errors"
 )

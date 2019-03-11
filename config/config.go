@@ -2,8 +2,8 @@ package config
 
 import (
 	"github.com/cihub/seelog"
-	eos "github.com/eosforce/goeosforce"
-	"github.com/eosforce/goeosforce/ecc"
+	eos "github.com/eosforce/goforceio"
+	"github.com/eosforce/goforceio/ecc"
 	"github.com/pkg/errors"
 )
 

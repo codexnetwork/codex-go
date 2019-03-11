@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	eos "github.com/eosforce/goeosforce"
+	eos "github.com/eosforce/goforceio"
 	"github.com/pkg/errors"
 )
 

@@ -4,8 +4,8 @@ import (
 	"crypto/sha256"
 	"fmt"
 
-	eos "github.com/eosforce/goeosforce"
-	"github.com/eosforce/goeosforce/ecc"
+	eos "github.com/eosforce/goforceio"
+	"github.com/eosforce/goforceio/ecc"
 )
 
 // ConfigSigner singer with use config keys

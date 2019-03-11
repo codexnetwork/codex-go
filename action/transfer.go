@@ -1,7 +1,7 @@
 package action
 
 import (
-	eos "github.com/eosforce/goeosforce"
+	eos "github.com/eosforce/goforceio"
 )
 
 // TokenAccountName account name for token contact to chain

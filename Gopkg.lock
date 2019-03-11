@@ -10,9 +10,9 @@
   version = "v2.6"
 
 [[projects]]
-  branch = "forceio"
-  digest = "1:89a54edcd372407f7605be1c06372bf290ed5a408e67694a52dcd966f0ab9d9c"
-  name = "github.com/eosforce/goeosforce"
+  branch = "master"
+  digest = "1:f273f92885b50ada2793edc3a07d53c6ff6b49106b41880f0d826afa78c4f8a2"
+  name = "github.com/eosforce/goforceio"
   packages = [
     ".",
     "btcsuite/btcd/btcec",
@@ -22,8 +22,7 @@
     "eoserr",
   ]
   pruneopts = "UT"
-  revision = "2aed997fce17fbaf2ce29bda52959a26c9860181"
-  source = "github.com/eosforce/goeosforce"
+  revision = "3b584233ec5d6d33e383c59d0712f2bcad9d354f"
 
 [[projects]]
   digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
@@ -34,12 +33,12 @@
   version = "v0.8.1"
 
 [[projects]]
-  digest = "1:e406c8abe158c24e64775a6381085014943301ffa175a7b53c33cb391ff9b4f2"
+  digest = "1:7df351557a6d5c30804e7d6f7ed87f2fccb0619c08fcc84869a93f22bec96c11"
   name = "github.com/tidwall/gjson"
   packages = ["."]
   pruneopts = "UT"
-  revision = "5a96cfda705e1762dc0671e26b0b78925ad97e29"
-  version = "v1.1.5"
+  revision = "eee0b6226f0d1db2675a176fdfaa8419bcad4ca8"
+  version = "v1.2.1"
 
 [[projects]]
   digest = "1:8453ddbed197809ee8ca28b06bd04e127bec9912deb4ba451fea7a1eca578328"
@@ -50,12 +49,20 @@
   version = "v1.0.1"
 
 [[projects]]
-  digest = "1:ea8da5f44f5e15bb589cca1bd9b85ceb9c05257e83824a725fb0243665e3ce1c"
+  branch = "master"
+  digest = "1:88611438dc87bda5862e2d12d8e901bac8ebfd4a9034a896d2f69835360439a7"
+  name = "github.com/tidwall/pretty"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "65a9db5fad5105a89e17f38adcc9878685be6d78"
+
+[[projects]]
+  digest = "1:b70c951ba6fdeecfbd50dabe95aa5e1b973866ae9abbece46ad60348112214f2"
   name = "github.com/tidwall/sjson"
   packages = ["."]
   pruneopts = "UT"
-  revision = "c943cc8c8d751d9b33444adf78ae04c2fc8be754"
-  version = "v1.0.3"
+  revision = "25fb082a20e29e83fb7b7ef5f5919166aad1f084"
+  version = "v1.0.4"
 
 [[projects]]
   digest = "1:3c1a69cdae3501bf75e76d0d86dc6f2b0a7421bc205c0cb7b96b19eed464a34d"
@@ -90,19 +97,19 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:b69153653dbbbd9b2be2be289dfb94014284c00bb92e73b800f8f8c239c1ca80"
+  digest = "1:1fa95129371749532e2ac8b93a0016c549ebe77f25c6fad296b6ee271fae2fd6"
   name = "golang.org/x/crypto"
   packages = ["ripemd160"]
   pruneopts = "UT"
-  revision = "057139ce5d2bdbe6fe73c53679e24e9cf007f637"
+  revision = "c2843e01d9a2bc60bb26ad24e09734fdc2d9ec58"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
     "github.com/cihub/seelog",
-    "github.com/eosforce/goeosforce",
-    "github.com/eosforce/goeosforce/ecc",
+    "github.com/eosforce/goforceio",
+    "github.com/eosforce/goforceio/ecc",
     "github.com/pkg/errors",
   ]
   solver-name = "gps-cdcl"

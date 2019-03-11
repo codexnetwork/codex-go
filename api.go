@@ -1,7 +1,7 @@
 package force
 
 import (
-	"github.com/eosforce/goeosforce"
+	"github.com/eosforce/goforceio"
 	"github.com/fanyang1988/force-go/common"
 )
 

@@ -3,10 +3,10 @@ package main
 import (
 	"flag"
 
-	"github.com/eosforce/goeosforce/ecc"
+	"github.com/eosforce/goforceio/ecc"
 
 	"github.com/cihub/seelog"
-	eos "github.com/eosforce/goeosforce"
+	eos "github.com/eosforce/goforceio"
 	force "github.com/fanyang1988/force-go"
 	"github.com/fanyang1988/force-go/action"
 )

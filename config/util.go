@@ -6,7 +6,7 @@ import (
 	"errors"
 	"io/ioutil"
 
-	eos "github.com/eosforce/goeosforce"
+	eos "github.com/eosforce/goforceio"
 )
 
 // LoadJSONFile load a json file to obj
