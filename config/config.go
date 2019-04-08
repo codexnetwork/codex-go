@@ -84,5 +84,7 @@ func (c *Config) Parse(data *ConfigData) error {
 		c.ChainID = nil
 	}
 
+	c.URL = data.URL
+
 	return nil
 }
