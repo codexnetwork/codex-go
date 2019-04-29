@@ -16,6 +16,7 @@ type API struct {
 func (api *API) Init(cfg *config.Config) error {
 	api.API = eos.New(cfg.URL)
 	api.API.Debug = cfg.IsDebug
+	api.Cfg = *cfg
 
 	err := api.checkChainID()
 	if err != nil {
