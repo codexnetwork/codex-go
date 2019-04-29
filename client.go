@@ -2,6 +2,7 @@ package force
 
 import (
 	"github.com/fanyang1988/force-go/config"
+	eosforceapi "github.com/fanyang1988/force-go/eosforce"
 	eosioapi "github.com/fanyang1988/force-go/eosio"
 	forceioapi "github.com/fanyang1988/force-go/forceio"
 	"github.com/fanyang1988/force-go/types"
@@ -35,6 +36,8 @@ func NewClientAPI(typ ClientType, cfg *config.ConfigData) (types.ClientInterface
 		res = &forceioapi.API{}
 	case EOSIO:
 		res = &eosioapi.API{}
+	case EOSForce:
+		res = &eosforceapi.API{}
 	default:
 		return nil, errors.New("unsupported api type")
 	}
