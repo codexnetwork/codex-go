@@ -14,7 +14,7 @@ import (
 var configPath = flag.String("cfg", "../config.json", "confg file path")
 
 func init() {
-	ecc.PublicKeyPrefixCompat = "FOSC"
+	ecc.PublicKeyPrefixCompat = "CDX"
 }
 
 func main() {
@@ -27,7 +27,7 @@ func main() {
 		return
 	}
 
-	q, err := eos.NewAsset("1000.0000 SYS")
+	q, err := eos.NewAsset("1000.0000 CDX")
 	if err != nil {
 		seelog.Errorf("asset err by %s", err.Error())
 		return
