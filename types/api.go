@@ -16,6 +16,7 @@ type ClientInterface interface {
 	GetInfoData() (*InfoResp, error)
 	GetBlockDataByID(id string) (*BlockGeneralInfo, error)
 	GetBlockDataByNum(num uint32) (*BlockGeneralInfo, error)
+	Name(n string) interface{}
 }
 
 // PushTransactionFullResp

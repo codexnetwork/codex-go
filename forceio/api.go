@@ -107,3 +107,7 @@ func (api *API) GetBlockDataByNum(num uint32) (*types.BlockGeneralInfo, error) {
 
 	return res, err
 }
+
+func (api *API) Name(n string) interface{} {
+	return eos.Name(n)
+}
