@@ -28,7 +28,7 @@ type Client struct {
 	typ ClientType
 }
 
-func NewClientAPI(typ ClientType, cfg *config.Config) (types.ClientInterface, error) {
+func NewClientAPI(typ ClientType, cfg *config.ConfigData) (types.ClientInterface, error) {
 	var res types.ClientInterface
 	switch typ {
 	case FORCEIO:
@@ -46,7 +46,7 @@ func NewClientAPI(typ ClientType, cfg *config.Config) (types.ClientInterface, er
 }
 
 // NewClient create client by config data
-func NewClient(typ ClientType, cfg *config.Config) (types.ClientInterface, error) {
+func NewClient(typ ClientType, cfg *config.ConfigData) (types.ClientInterface, error) {
 	return NewClientAPI(typ, cfg)
 }
 

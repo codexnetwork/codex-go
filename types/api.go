@@ -11,7 +11,7 @@ import (
 
 // ClientInterface client interface for all client
 type ClientInterface interface {
-	Init(cfg *config.Config) error
+	Init(cfg *config.ConfigData) error
 	PushActions(actions ...*Action) (*PushTransactionFullResp, error)
 	GetInfoData() (*InfoResp, error)
 	GetBlockDataByID(id string) (*BlockGeneralInfo, error)

@@ -1,4 +1,4 @@
-package common
+package forceio
 
 import (
 	eos "github.com/eosforce/goforceio"
@@ -10,15 +10,19 @@ import (
 // API client api to forceio chain
 type API struct {
 	*eos.API
-	Cfg config.Config
+	Cfg Config
 }
 
-func (api *API) Init(cfg *config.Config) error {
+func (api *API) Init(cfg *config.ConfigData) error {
 	api.API = eos.New(cfg.URL)
-	api.API.Debug = cfg.IsDebug
-	api.Cfg = *cfg
 
-	err := api.checkChainID()
+	err := api.Cfg.Parse(cfg)
+	if err != nil {
+		return err
+	}
+	api.API.Debug = api.Cfg.IsDebug
+
+	err = api.checkChainID()
 	if err != nil {
 		return err
 	}
