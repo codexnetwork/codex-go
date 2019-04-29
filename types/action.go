@@ -1,6 +1,7 @@
 package types
 
 import (
+	eosio "github.com/eoscanada/eos-go"
 	forceio "github.com/eosforce/goforceio"
 )
 
@@ -53,6 +54,23 @@ func (a *Action) FromForceio(act *forceio.Action) error {
 	return nil
 }
 
+func (a *Action) FromEOSIO(act *eosio.Action) error {
+	a.Account = string(act.Account)
+	a.Name = string(act.Name)
+
+	a.Authorization = make([]PermissionLevel, 0, len(act.Authorization))
+	for _, au := range act.Authorization {
+		a.Authorization = append(a.Authorization, PermissionLevel{
+			Actor:      string(au.Actor),
+			Permission: string(au.Permission),
+		})
+	}
+
+	a.Data = act.Data
+
+	return nil
+}
+
 func (a *Action) ToForceio() (*forceio.Action, error) {
 	auth := make([]forceio.PermissionLevel, 0, len(a.Authorization))
 	for _, au := range a.Authorization {
@@ -66,5 +84,21 @@ func (a *Action) ToForceio() (*forceio.Action, error) {
 		Name:          forceio.ActN(a.Name),
 		Authorization: auth,
 		ActionData:    forceio.NewActionData(a.Data),
+	}, nil
+}
+
+func (a *Action) ToEOSIO() (*eosio.Action, error) {
+	auth := make([]eosio.PermissionLevel, 0, len(a.Authorization))
+	for _, au := range a.Authorization {
+		auth = append(auth, eosio.PermissionLevel{
+			Actor:      eosio.AN(au.Actor),
+			Permission: eosio.PermissionName(au.Permission),
+		})
+	}
+	return &eosio.Action{
+		Account:       eosio.AN(a.Account),
+		Name:          eosio.ActN(a.Name),
+		Authorization: auth,
+		ActionData:    eosio.NewActionData(a.Data),
 	}, nil
 }

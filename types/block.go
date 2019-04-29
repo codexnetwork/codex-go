@@ -3,6 +3,7 @@ package types
 import (
 	"time"
 
+	eosio "github.com/eoscanada/eos-go"
 	forceio "github.com/eosforce/goforceio"
 )
 
@@ -54,6 +55,37 @@ func (b *BlockGeneralInfo) FromForceio(block *forceio.SignedBlock) error {
 	for _, trx := range block.Transactions {
 		t := &TransactionGeneralInfo{}
 		err := t.FromForceio(&trx.Transaction)
+		if err != nil {
+			return err
+		}
+		b.Transactions = append(b.Transactions, TransactionReceipt{
+			Status:               TransactionStatus(trx.Status),
+			CPUUsageMicroSeconds: trx.CPUUsageMicroSeconds,
+			NetUsageWords:        uint32(trx.NetUsageWords),
+			Transaction:          *t,
+		})
+	}
+
+	return nil
+}
+
+func (b *BlockGeneralInfo) FromEOSIO(block *eosio.SignedBlock) error {
+	id, _ := block.BlockID()
+
+	b.ID = Checksum256(id)
+	b.BlockNum = block.BlockNumber()
+	b.Timestamp = block.Timestamp.Time
+	b.Producer = string(block.Producer)
+	b.Confirmed = block.Confirmed
+	b.Previous = Checksum256(block.Previous)
+	b.TransactionMRoot = Checksum256(block.TransactionMRoot)
+	b.ActionMRoot = Checksum256(block.ActionMRoot)
+	b.ScheduleVersion = block.ScheduleVersion
+
+	b.Transactions = make([]TransactionReceipt, 0, len(block.Transactions))
+	for _, trx := range block.Transactions {
+		t := &TransactionGeneralInfo{}
+		err := t.FromEOSIO(&trx.Transaction)
 		if err != nil {
 			return err
 		}

@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/fanyang1988/force-go/config"
-
+	eosio "github.com/eoscanada/eos-go"
 	forceio "github.com/eosforce/goforceio"
+	"github.com/fanyang1988/force-go/config"
 )
 
 // ClientInterface client interface for all client
@@ -45,6 +45,14 @@ func (p *PushTransactionFullResp) FromForceio(rsp *forceio.PushTransactionFullRe
 	return p.FillProcessedDatas(rsp.Processed)
 }
 
+func (p *PushTransactionFullResp) FromEOSIO(rsp *eosio.PushTransactionFullResp) error {
+	p.StatusCode = rsp.StatusCode
+	p.TransactionID = rsp.TransactionID
+	p.BlockID = rsp.BlockID
+	p.BlockNum = rsp.BlockNum
+	return p.FillProcessedDatas(rsp.Processed)
+}
+
 type InfoResp struct {
 	ServerVersion            string      `json:"server_version"`
 	ChainID                  Checksum256 `json:"chain_id"`
@@ -62,6 +70,24 @@ type InfoResp struct {
 }
 
 func (i *InfoResp) FromForceio(info *forceio.InfoResp) error {
+	i.ServerVersion = info.ServerVersion
+	i.ChainID = Checksum256(info.ChainID)
+	i.HeadBlockNum = info.HeadBlockNum
+	i.LastIrreversibleBlockNum = info.LastIrreversibleBlockNum
+	i.LastIrreversibleBlockID = Checksum256(info.LastIrreversibleBlockID)
+	i.HeadBlockID = Checksum256(info.HeadBlockID)
+	i.HeadBlockTime = info.HeadBlockTime.Time
+	i.HeadBlockProducer = string(info.HeadBlockProducer)
+	i.VirtualBlockCPULimit = int64(info.VirtualBlockCPULimit)
+	i.VirtualBlockNetLimit = int64(info.VirtualBlockNetLimit)
+	i.BlockCPULimit = int64(info.BlockCPULimit)
+	i.BlockNetLimit = int64(info.BlockNetLimit)
+	i.ServerVersionString = info.ServerVersionString
+
+	return nil
+}
+
+func (i *InfoResp) FromEOSIO(info *eosio.InfoResp) error {
 	i.ServerVersion = info.ServerVersion
 	i.ChainID = Checksum256(info.ChainID)
 	i.HeadBlockNum = info.HeadBlockNum
