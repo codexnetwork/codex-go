@@ -2,6 +2,7 @@ package action
 
 import (
 	eos "github.com/eosforce/goforceio"
+	"github.com/fanyang1988/force-go/types"
 )
 
 // TokenAccountName account name for token contact to chain
@@ -16,18 +17,18 @@ type Transfer struct {
 }
 
 // NewTransfer new transfer action by TokenAccountName contract
-func NewTransfer(from, to eos.AccountName, asset eos.Asset, memo string) *eos.Action {
-	return &eos.Action{
-		Account: TokenAccountName,
-		Name:    eos.ActN("transfer"),
-		Authorization: []eos.PermissionLevel{
-			{Actor: from, Permission: eos.PN("active")},
+func NewTransfer(from, to eos.AccountName, asset eos.Asset, memo string) *types.Action {
+	return &types.Action{
+		Account: string(TokenAccountName),
+		Name:    "transfer",
+		Authorization: []types.PermissionLevel{
+			{Actor: string(from), Permission: "active"},
 		},
-		ActionData: eos.NewActionData(Transfer{
+		Data: Transfer{
 			From:     from,
 			To:       to,
 			Quantity: asset,
 			Memo:     memo,
-		}),
+		},
 	}
 }

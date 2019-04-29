@@ -21,8 +21,8 @@ func main() {
 	defer seelog.Flush()
 	flag.Parse()
 
-	client, err := force.NewClientFromFile(*configPath)
-	if err != nil{
+	client, err := force.NewClientFromFile(force.FORCEIO, *configPath)
+	if err != nil {
 		seelog.Errorf("new client err by %s", err.Error())
 		return
 	}

@@ -1,32 +1,60 @@
 package force
 
 import (
-	"github.com/fanyang1988/force-go/common"
 	"github.com/fanyang1988/force-go/config"
+	"github.com/fanyang1988/force-go/types"
+	"github.com/pkg/errors"
+
+	forceioapi "github.com/fanyang1988/force-go/forceio"
+)
+
+type ClientType uint8
+
+const (
+	ClientTypeNil = ClientType(iota)
+	FORCEIO
+	EOSForce
+	Codex
+	EOSIO
+	ENU     // no support now
+	BOS     // no support now
+	TLOS    // no support now
+	MEETONE // no support now
 )
 
 // Client client to forceio chain
 type Client struct {
-	api *common.API
+	api types.ClientInterface
+	typ ClientType
 }
 
-// NewClient create client by config data
-func NewClient(cfg *config.Config) (*Client, error) {
-	api, err := common.NewAPI(cfg)
+func NewClientAPI(typ ClientType, cfg *config.Config) (types.ClientInterface, error) {
+	var res types.ClientInterface
+	switch typ {
+	case FORCEIO:
+		res = &forceioapi.API{}
+	default:
+		return nil, errors.New("unsupported api type")
+	}
+
+	err := res.Init(cfg)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Client{
-		api: api,
-	}, nil
+	return res, nil
+}
+
+// NewClient create client by config data
+func NewClient(typ ClientType, cfg *config.Config) (types.ClientInterface, error) {
+	return NewClientAPI(typ, cfg)
 }
 
 // NewClientFromFile create client by config file
-func NewClientFromFile(path string) (*Client, error) {
+func NewClientFromFile(typ ClientType, path string) (types.ClientInterface, error) {
 	cfg, err := config.LoadCfgFromFile(path)
 	if err != nil {
 		return nil, err
 	}
-	return NewClient(cfg)
+	return NewClient(typ, cfg)
 }
