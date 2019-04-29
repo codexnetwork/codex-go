@@ -4,15 +4,18 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/fanyang1988/force-go/config"
+
 	forceio "github.com/eosforce/goforceio"
 )
 
 // ClientInterface client interface for all client
 type ClientInterface interface {
+	Init(cfg *config.Config) error
 	PushActions(actions ...*Action) (*PushTransactionFullResp, error)
-	GetInfo() (*InfoResp, error)
-	GetBlockByID(id string) (*BlockGeneralInfo, error)
-	GetBlockByNum(num uint32) (*BlockGeneralInfo, error)
+	GetInfoData() (*InfoResp, error)
+	GetBlockDataByID(id string) (*BlockGeneralInfo, error)
+	GetBlockDataByNum(num uint32) (*BlockGeneralInfo, error)
 }
 
 // PushTransactionFullResp

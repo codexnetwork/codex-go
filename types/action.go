@@ -29,7 +29,6 @@ type Action struct {
 	Name          string
 	Authorization []PermissionLevel
 	Data          interface{}
-	HexData       []byte
 }
 
 type PermissionLevel struct {
@@ -50,7 +49,22 @@ func (a *Action) FromForceio(act *forceio.Action) error {
 	}
 
 	a.Data = act.Data
-	a.HexData = act.HexData[:]
 
 	return nil
+}
+
+func (a *Action) ToForceio() (*forceio.Action, error) {
+	auth := make([]forceio.PermissionLevel, 0, len(a.Authorization))
+	for _, au := range a.Authorization {
+		auth = append(auth, forceio.PermissionLevel{
+			Actor:      forceio.AN(au.Actor),
+			Permission: forceio.PermissionName(au.Permission),
+		})
+	}
+	return &forceio.Action{
+		Account:       forceio.AN(a.Account),
+		Name:          forceio.ActN(a.Name),
+		Authorization: auth,
+		ActionData:    forceio.NewActionData(a.Data),
+	}, nil
 }
