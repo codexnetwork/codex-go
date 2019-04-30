@@ -7,19 +7,19 @@ import (
 type switcher2EOSIO struct {
 }
 
-func (t switcher2EOSIO) Type() ClientType {
+func (s switcher2EOSIO) Type() ClientType {
 	return EOSIO
 }
 
-func (t switcher2EOSIO) NameFromCommon(n string) interface{} {
+func (s switcher2EOSIO) NameFromCommon(n string) interface{} {
 	return chain.Name(n)
 }
 
-func (t switcher2EOSIO) Checksum256FromCommon(c Checksum256) interface{} {
+func (s switcher2EOSIO) Checksum256FromCommon(c Checksum256) interface{} {
 	return chain.Checksum256(c)
 }
 
-func (t switcher2EOSIO) PushTransactionFullRespToCommon(r interface{}) (*PushTransactionFullResp, error) {
+func (s switcher2EOSIO) PushTransactionFullRespToCommon(r interface{}) (*PushTransactionFullResp, error) {
 	p := &PushTransactionFullResp{}
 
 	rsp, ok := r.(*chain.PushTransactionFullResp)
@@ -35,7 +35,7 @@ func (t switcher2EOSIO) PushTransactionFullRespToCommon(r interface{}) (*PushTra
 	return p, p.FillProcessedDatas(rsp.Processed)
 }
 
-func (t switcher2EOSIO) InfoRespToCommon(r interface{}) (*InfoResp, error) {
+func (s switcher2EOSIO) InfoRespToCommon(r interface{}) (*InfoResp, error) {
 	i := &InfoResp{}
 
 	info, ok := r.(*chain.InfoResp)
@@ -60,7 +60,7 @@ func (t switcher2EOSIO) InfoRespToCommon(r interface{}) (*InfoResp, error) {
 	return i, nil
 }
 
-func (t switcher2EOSIO) ActionToCommon(d interface{}) (*Action, error) {
+func (s switcher2EOSIO) ActionToCommon(d interface{}) (*Action, error) {
 	res := &Action{}
 
 	r, ok := d.(*chain.Action)
@@ -71,22 +71,60 @@ func (t switcher2EOSIO) ActionToCommon(d interface{}) (*Action, error) {
 	return res, res.FromEOSIO(r)
 }
 
-func (t switcher2EOSIO) ActionFromCommon(d *Action) (interface{}, error) {
+func (s switcher2EOSIO) ActionFromCommon(d *Action) (interface{}, error) {
 	return d.ToEOSIO()
 }
 
-func (t switcher2EOSIO) TransactionToCommon(r interface{}) (*TransactionGeneralInfo, error) {
-	res := &TransactionGeneralInfo{}
+func (s switcher2EOSIO) TransactionToCommon(r interface{}) (*TransactionGeneralInfo, error) {
+	t := &TransactionGeneralInfo{}
 
-	d, ok := r.(*chain.TransactionWithID)
+	trx, ok := r.(*chain.TransactionWithID)
 	if !ok {
 		return nil, ErrTypeErrToChain
 	}
 
-	return res, res.FromEOSIO(d)
+	t.ID = Checksum256(trx.ID)
+	trxData, err := trx.Packed.Unpack()
+	if err != nil {
+		return nil, err
+	}
+
+	t.Expiration = trxData.Expiration.Time
+	t.RefBlockNum = trxData.RefBlockNum
+	t.RefBlockPrefix = trxData.RefBlockPrefix
+	t.MaxNetUsageWords = uint32(trxData.MaxNetUsageWords)
+	t.MaxCPUUsageMS = trxData.MaxCPUUsageMS
+	t.DelaySec = uint32(trxData.DelaySec)
+
+	t.ContextFreeActions = make([]*Action, 0, len(trxData.ContextFreeActions))
+	for _, a := range trxData.ContextFreeActions {
+		act, err := s.ActionToCommon(a)
+		if err != nil {
+			return nil, err
+		}
+
+		t.ContextFreeActions = append(t.ContextFreeActions, act)
+	}
+
+	t.Actions = make([]*Action, 0, len(trxData.Actions))
+	for _, a := range trxData.Actions {
+		act, err := s.ActionToCommon(a)
+		if err != nil {
+			return nil, err
+		}
+
+		t.Actions = append(t.Actions, act)
+	}
+
+	t.ContextFreeData = make([][]byte, 0, len(trxData.ContextFreeData))
+	for _, cd := range trxData.ContextFreeData {
+		t.ContextFreeData = append(t.ContextFreeData, []byte(cd))
+	}
+
+	return t, nil
 }
 
-func (t switcher2EOSIO) BlockToCommon(r interface{}) (*BlockGeneralInfo, error) {
+func (s switcher2EOSIO) BlockToCommon(r interface{}) (*BlockGeneralInfo, error) {
 	res := &BlockGeneralInfo{}
 
 	d, ok := r.(*chain.SignedBlock)
