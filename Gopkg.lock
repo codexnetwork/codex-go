@@ -10,8 +10,38 @@
   version = "v2.6"
 
 [[projects]]
+  digest = "1:b5583253b6a691a3d223028bd3029b1be8a9cbd0f2dad870e9953f5c8c6cc1e0"
+  name = "github.com/eoscanada/eos-go"
+  packages = [
+    ".",
+    "btcsuite/btcd/btcec",
+    "btcsuite/btcutil",
+    "btcsuite/btcutil/base58",
+    "ecc",
+    "eoserr",
+  ]
+  pruneopts = "UT"
+  revision = "dc31757533135f3380a5dd5143531eef82fdbeff"
+  version = "v0.8.11"
+
+[[projects]]
   branch = "master"
-  digest = "1:f273f92885b50ada2793edc3a07d53c6ff6b49106b41880f0d826afa78c4f8a2"
+  digest = "1:d6bc8f74c267a5738e0c20cc0d465d9a633a771f077721caae1be64080657616"
+  name = "github.com/eosforce/goeosforce"
+  packages = [
+    ".",
+    "btcsuite/btcd/btcec",
+    "btcsuite/btcutil",
+    "btcsuite/btcutil/base58",
+    "ecc",
+    "eoserr",
+  ]
+  pruneopts = "UT"
+  revision = "2f03154bca8f1b9758f34aa2fc249357630a58fd"
+
+[[projects]]
+  branch = "master"
+  digest = "1:88880cf13047d637647443f2ce5534fc072d75abaaa6e5e2b33d1935cf265808"
   name = "github.com/eosforce/goforceio"
   packages = [
     ".",
@@ -22,7 +52,7 @@
     "eoserr",
   ]
   pruneopts = "UT"
-  revision = "3b584233ec5d6d33e383c59d0712f2bcad9d354f"
+  revision = "aaf7221564db2bfb705740a111f8d9d05f410fe4"
 
 [[projects]]
   digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
@@ -50,11 +80,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:88611438dc87bda5862e2d12d8e901bac8ebfd4a9034a896d2f69835360439a7"
+  digest = "1:ddfe0a54e5f9b29536a6d7b2defa376f2cb2b6e4234d676d7ff214d5b097cb50"
   name = "github.com/tidwall/pretty"
   packages = ["."]
   pruneopts = "UT"
-  revision = "65a9db5fad5105a89e17f38adcc9878685be6d78"
+  revision = "1166b9ac2b65e46a43d8618d30d1554f4652d49b"
 
 [[projects]]
   digest = "1:b70c951ba6fdeecfbd50dabe95aa5e1b973866ae9abbece46ad60348112214f2"
@@ -65,12 +95,12 @@
   version = "v1.0.4"
 
 [[projects]]
-  digest = "1:3c1a69cdae3501bf75e76d0d86dc6f2b0a7421bc205c0cb7b96b19eed464a34d"
+  digest = "1:777e729b475d3895c7229552aa10076f0d177daf37c0a72258006d046d329960"
   name = "go.uber.org/atomic"
   packages = ["."]
   pruneopts = "UT"
-  revision = "1ea20fb1cbb1cc08cbd0d913a96dead89aa18289"
-  version = "v1.3.2"
+  revision = "4e336646b2ef9fc6e47be8e21594178f98e5ebcf"
+  version = "v1.2.0"
 
 [[projects]]
   digest = "1:60bf2a5e347af463c42ed31a493d817f8a72f102543060ed992754e689805d1a"
@@ -81,7 +111,7 @@
   version = "v1.1.0"
 
 [[projects]]
-  digest = "1:c52caf7bd44f92e54627a31b85baf06a68333a196b3d8d241480a774733dcf8b"
+  digest = "1:676160e6a4722b08e0e26b11521d575c2cb2b6f0c679e1ee6178c5d8dee51e5e"
   name = "go.uber.org/zap"
   packages = [
     ".",
@@ -92,8 +122,8 @@
     "zapcore",
   ]
   pruneopts = "UT"
-  revision = "ff33455a0e382e8a81d14dd7c922020b6b5e7982"
-  version = "v1.9.1"
+  revision = "27376062155ad36be76b0f12cf1572a221d3a48c"
+  version = "v1.10.0"
 
 [[projects]]
   branch = "master"
@@ -101,13 +131,17 @@
   name = "golang.org/x/crypto"
   packages = ["ripemd160"]
   pruneopts = "UT"
-  revision = "c2843e01d9a2bc60bb26ad24e09734fdc2d9ec58"
+  revision = "a29dc8fdc73485234dbef99ebedb95d2eced08de"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
     "github.com/cihub/seelog",
+    "github.com/eoscanada/eos-go",
+    "github.com/eoscanada/eos-go/ecc",
+    "github.com/eosforce/goeosforce",
+    "github.com/eosforce/goeosforce/ecc",
     "github.com/eosforce/goforceio",
     "github.com/eosforce/goforceio/ecc",
     "github.com/pkg/errors",

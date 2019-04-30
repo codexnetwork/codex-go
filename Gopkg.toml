@@ -30,6 +30,18 @@
   version = "2.6.0"
 
 [[constraint]]
+  name = "github.com/eoscanada/eos-go"
+  version = "0.8.11"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/eosforce/goeosforce"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/eosforce/goforceio"
+
+[[constraint]]
   name = "github.com/pkg/errors"
   version = "0.8.1"
 
