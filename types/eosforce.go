@@ -125,12 +125,39 @@ func (s switcher2EOSForce) TransactionToCommon(r interface{}) (*TransactionGener
 }
 
 func (s switcher2EOSForce) BlockToCommon(r interface{}) (*BlockGeneralInfo, error) {
-	res := &BlockGeneralInfo{}
+	b := &BlockGeneralInfo{}
 
-	d, ok := r.(*chain.SignedBlock)
+	block, ok := r.(*chain.SignedBlock)
 	if !ok {
 		return nil, ErrTypeErrToChain
 	}
 
-	return res, res.FromEOSForce(d)
+	id, _ := block.BlockID()
+
+	b.ID = Checksum256(id)
+	b.BlockNum = block.BlockNumber()
+	b.Timestamp = block.Timestamp.Time
+	b.Producer = string(block.Producer)
+	b.Confirmed = block.Confirmed
+	b.Previous = Checksum256(block.Previous)
+	b.TransactionMRoot = Checksum256(block.TransactionMRoot)
+	b.ActionMRoot = Checksum256(block.ActionMRoot)
+	b.ScheduleVersion = block.ScheduleVersion
+
+	b.Transactions = make([]TransactionReceipt, 0, len(block.Transactions))
+	for _, trx := range block.Transactions {
+		t := &TransactionGeneralInfo{}
+		t, err := s.TransactionToCommon(&trx.Transaction)
+		if err != nil {
+			return nil, err
+		}
+		b.Transactions = append(b.Transactions, TransactionReceipt{
+			Status:               TransactionStatus(trx.Status),
+			CPUUsageMicroSeconds: trx.CPUUsageMicroSeconds,
+			NetUsageWords:        uint32(trx.NetUsageWords),
+			Transaction:          *t,
+		})
+	}
+
+	return b, nil
 }
