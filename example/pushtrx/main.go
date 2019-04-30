@@ -9,6 +9,7 @@ import (
 	eos "github.com/eosforce/goforceio"
 	force "github.com/fanyang1988/force-go"
 	"github.com/fanyang1988/force-go/action"
+	"github.com/fanyang1988/force-go/types"
 )
 
 var configPath = flag.String("cfg", "../config.json", "confg file path")
@@ -21,7 +22,7 @@ func main() {
 	defer seelog.Flush()
 	flag.Parse()
 
-	client, err := force.NewClientFromFile(force.FORCEIO, *configPath)
+	client, err := force.NewClientFromFile(types.FORCEIO, *configPath)
 	if err != nil {
 		seelog.Errorf("new client err by %s", err.Error())
 		return

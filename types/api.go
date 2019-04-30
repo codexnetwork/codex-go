@@ -10,6 +10,20 @@ import (
 	"github.com/fanyang1988/force-go/config"
 )
 
+type ClientType uint8
+
+const (
+	ClientTypeNil = ClientType(iota)
+	FORCEIO
+	EOSForce
+	Codex
+	EOSIO
+	ENU     // no support now
+	BOS     // no support now
+	TLOS    // no support now
+	MEETONE // no support now
+)
+
 // ClientInterface client interface for all client
 type ClientInterface interface {
 	Init(cfg *config.ConfigData) error
