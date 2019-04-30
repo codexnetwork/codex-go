@@ -94,7 +94,8 @@ func (api *API) GetBlockDataByID(id string) (*types.BlockGeneralInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	// fix id err
+	res.ID = types.Checksum256(rsp.ID)
 	return res, err
 }
 func (api *API) GetBlockDataByNum(num uint32) (*types.BlockGeneralInfo, error) {
@@ -108,7 +109,8 @@ func (api *API) GetBlockDataByNum(num uint32) (*types.BlockGeneralInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	// fix id err
+	res.ID = types.Checksum256(rsp.ID)
 	return res, err
 }
 

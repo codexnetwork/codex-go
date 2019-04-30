@@ -1,8 +1,10 @@
 package types
 
 import (
+	"encoding/binary"
 	"time"
 
+	"github.com/cihub/seelog"
 	eosio "github.com/eoscanada/eos-go"
 	eosforce "github.com/eosforce/goeosforce"
 	forceio "github.com/eosforce/goforceio"
@@ -102,7 +104,10 @@ func (b *BlockGeneralInfo) FromEOSIO(block *eosio.SignedBlock) error {
 }
 
 func (b *BlockGeneralInfo) FromEOSForce(block *eosforce.SignedBlock) error {
+	seelog.Debugf("from eosforce %v", *block)
 	id, _ := block.BlockID()
+
+	seelog.Debugf("id %d %d %v", block.BlockNumber(), binary.BigEndian.Uint32(id[:4]), id.String())
 
 	b.ID = Checksum256(id)
 	b.BlockNum = block.BlockNumber()
