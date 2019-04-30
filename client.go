@@ -9,34 +9,20 @@ import (
 	"github.com/pkg/errors"
 )
 
-type ClientType uint8
-
-const (
-	ClientTypeNil = ClientType(iota)
-	FORCEIO
-	EOSForce
-	Codex
-	EOSIO
-	ENU     // no support now
-	BOS     // no support now
-	TLOS    // no support now
-	MEETONE // no support now
-)
-
 // Client client to forceio chain
 type Client struct {
 	api types.ClientInterface
-	typ ClientType
+	typ types.ClientType
 }
 
-func NewClientAPI(typ ClientType, cfg *config.ConfigData) (types.ClientInterface, error) {
+func NewClientAPI(typ types.ClientType, cfg *config.ConfigData) (types.ClientInterface, error) {
 	var res types.ClientInterface
 	switch typ {
-	case FORCEIO:
+	case types.FORCEIO:
 		res = &forceioapi.API{}
-	case EOSIO:
+	case types.EOSIO:
 		res = &eosioapi.API{}
-	case EOSForce:
+	case types.EOSForce:
 		res = &eosforceapi.API{}
 	default:
 		return nil, errors.New("unsupported api type")
@@ -51,12 +37,12 @@ func NewClientAPI(typ ClientType, cfg *config.ConfigData) (types.ClientInterface
 }
 
 // NewClient create client by config data
-func NewClient(typ ClientType, cfg *config.ConfigData) (types.ClientInterface, error) {
+func NewClient(typ types.ClientType, cfg *config.ConfigData) (types.ClientInterface, error) {
 	return NewClientAPI(typ, cfg)
 }
 
 // NewClientFromFile create client by config file
-func NewClientFromFile(typ ClientType, path string) (types.ClientInterface, error) {
+func NewClientFromFile(typ types.ClientType, path string) (types.ClientInterface, error) {
 	cfg, err := config.LoadCfgFromFile(path)
 	if err != nil {
 		return nil, err

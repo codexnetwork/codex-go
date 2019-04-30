@@ -1,13 +1,7 @@
 package types
 
 import (
-	"encoding/binary"
 	"time"
-
-	"github.com/cihub/seelog"
-	eosio "github.com/eoscanada/eos-go"
-	eosforce "github.com/eosforce/goeosforce"
-	forceio "github.com/eosforce/goforceio"
 )
 
 type BlockGeneralInfo struct {
@@ -39,100 +33,4 @@ type TransactionReceipt struct {
 	CPUUsageMicroSeconds uint32                 `json:"cpu_usage_us"`
 	NetUsageWords        uint32                 `json:"net_usage_words"`
 	Transaction          TransactionGeneralInfo `json:"trx"`
-}
-
-func (b *BlockGeneralInfo) FromForceio(block *forceio.SignedBlock) error {
-	id, _ := block.BlockID()
-
-	b.ID = Checksum256(id)
-	b.BlockNum = block.BlockNumber()
-	b.Timestamp = block.Timestamp.Time
-	b.Producer = string(block.Producer)
-	b.Confirmed = block.Confirmed
-	b.Previous = Checksum256(block.Previous)
-	b.TransactionMRoot = Checksum256(block.TransactionMRoot)
-	b.ActionMRoot = Checksum256(block.ActionMRoot)
-	b.ScheduleVersion = block.ScheduleVersion
-
-	b.Transactions = make([]TransactionReceipt, 0, len(block.Transactions))
-	for _, trx := range block.Transactions {
-		t := &TransactionGeneralInfo{}
-		err := t.FromForceio(&trx.Transaction)
-		if err != nil {
-			return err
-		}
-		b.Transactions = append(b.Transactions, TransactionReceipt{
-			Status:               TransactionStatus(trx.Status),
-			CPUUsageMicroSeconds: trx.CPUUsageMicroSeconds,
-			NetUsageWords:        uint32(trx.NetUsageWords),
-			Transaction:          *t,
-		})
-	}
-
-	return nil
-}
-
-func (b *BlockGeneralInfo) FromEOSIO(block *eosio.SignedBlock) error {
-	id, _ := block.BlockID()
-
-	b.ID = Checksum256(id)
-	b.BlockNum = block.BlockNumber()
-	b.Timestamp = block.Timestamp.Time
-	b.Producer = string(block.Producer)
-	b.Confirmed = block.Confirmed
-	b.Previous = Checksum256(block.Previous)
-	b.TransactionMRoot = Checksum256(block.TransactionMRoot)
-	b.ActionMRoot = Checksum256(block.ActionMRoot)
-	b.ScheduleVersion = block.ScheduleVersion
-
-	b.Transactions = make([]TransactionReceipt, 0, len(block.Transactions))
-	for _, trx := range block.Transactions {
-		t := &TransactionGeneralInfo{}
-		err := t.FromEOSIO(&trx.Transaction)
-		if err != nil {
-			return err
-		}
-		b.Transactions = append(b.Transactions, TransactionReceipt{
-			Status:               TransactionStatus(trx.Status),
-			CPUUsageMicroSeconds: trx.CPUUsageMicroSeconds,
-			NetUsageWords:        uint32(trx.NetUsageWords),
-			Transaction:          *t,
-		})
-	}
-
-	return nil
-}
-
-func (b *BlockGeneralInfo) FromEOSForce(block *eosforce.SignedBlock) error {
-	seelog.Debugf("from eosforce %v", *block)
-	id, _ := block.BlockID()
-
-	seelog.Debugf("id %d %d %v", block.BlockNumber(), binary.BigEndian.Uint32(id[:4]), id.String())
-
-	b.ID = Checksum256(id)
-	b.BlockNum = block.BlockNumber()
-	b.Timestamp = block.Timestamp.Time
-	b.Producer = string(block.Producer)
-	b.Confirmed = block.Confirmed
-	b.Previous = Checksum256(block.Previous)
-	b.TransactionMRoot = Checksum256(block.TransactionMRoot)
-	b.ActionMRoot = Checksum256(block.ActionMRoot)
-	b.ScheduleVersion = block.ScheduleVersion
-
-	b.Transactions = make([]TransactionReceipt, 0, len(block.Transactions))
-	for _, trx := range block.Transactions {
-		t := &TransactionGeneralInfo{}
-		err := t.FromEOSForce(&trx.Transaction)
-		if err != nil {
-			return err
-		}
-		b.Transactions = append(b.Transactions, TransactionReceipt{
-			Status:               TransactionStatus(trx.Status),
-			CPUUsageMicroSeconds: trx.CPUUsageMicroSeconds,
-			NetUsageWords:        uint32(trx.NetUsageWords),
-			Transaction:          *t,
-		})
-	}
-
-	return nil
 }

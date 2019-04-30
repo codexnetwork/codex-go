@@ -10,11 +10,15 @@ import (
 // API client api to forceio chain
 type API struct {
 	*eos.API
-	Cfg Config
+	Cfg      Config
+	switcher types.SwitcherInterface
+	typ      types.ClientType
 }
 
 func (api *API) Init(cfg *config.ConfigData) error {
 	api.API = eos.New(cfg.URL)
+	api.typ = types.EOSForce
+	api.switcher = types.NewSwitcherInterface(api.typ)
 
 	err := api.Cfg.Parse(cfg)
 	if err != nil {
@@ -59,8 +63,7 @@ func (api *API) PushActions(actions ...*types.Action) (*types.PushTransactionFul
 		return nil, err
 	}
 
-	res := &types.PushTransactionFullResp{}
-	err = res.FromForceio(rsp)
+	res, err := api.switcher.PushTransactionFullRespToCommon(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -74,8 +77,7 @@ func (api *API) GetInfoData() (*types.InfoResp, error) {
 		return nil, err
 	}
 
-	res := &types.InfoResp{}
-	err = res.FromForceio(rsp)
+	res, err := api.switcher.InfoRespToCommon(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -89,8 +91,7 @@ func (api *API) GetBlockDataByID(id string) (*types.BlockGeneralInfo, error) {
 		return nil, err
 	}
 
-	res := &types.BlockGeneralInfo{}
-	err = res.FromForceio(&rsp.SignedBlock)
+	res, err := api.switcher.BlockToCommon(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -104,8 +105,7 @@ func (api *API) GetBlockDataByNum(num uint32) (*types.BlockGeneralInfo, error) {
 		return nil, err
 	}
 
-	res := &types.BlockGeneralInfo{}
-	err = res.FromForceio(&rsp.SignedBlock)
+	res, err := api.switcher.BlockToCommon(rsp)
 	if err != nil {
 		return nil, err
 	}
