@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/pkg/errors"
+
 	eosio "github.com/eoscanada/eos-go"
 	eosforce "github.com/eosforce/goeosforce"
 	forceio "github.com/eosforce/goforceio"
@@ -33,6 +35,24 @@ type ClientInterface interface {
 	GetBlockDataByNum(num uint32) (*BlockGeneralInfo, error)
 	Name(n string) interface{}
 }
+
+// SwitcherInterface a interface for diff chain type transfer to common
+type SwitcherInterface interface {
+	Type() ClientType
+	NameFromCommon(n string) interface{}
+	Checksum256FromCommon(c Checksum256) interface{}
+	PushTransactionFullRespToCommon(r interface{}) (*PushTransactionFullResp, error)
+	InfoRespToCommon(r interface{}) (*InfoResp, error)
+	ActionToCommon(d interface{}) (*Action, error)
+	ActionFromCommon(d *Action) (interface{}, error)
+	TransactionToCommon(r interface{}) (*TransactionGeneralInfo, error)
+	BlockToCommon(r interface{}) (*BlockGeneralInfo, error)
+}
+
+var (
+	ErrTypeErrToChain = errors.New("ErrTypeErrToChain")
+	ErrNoSupportChain = errors.New("ErrNoSupportChain")
+)
 
 // PushTransactionFullResp
 type PushTransactionFullResp struct {
@@ -74,6 +94,31 @@ func (p *PushTransactionFullResp) FromEOSForce(rsp *eosforce.PushTransactionFull
 	p.BlockID = rsp.BlockID
 	p.BlockNum = rsp.BlockNum
 	return p.FillProcessedDatas(rsp.Processed)
+}
+
+func (p *PushTransactionFullResp) From(typ ClientType, rsp interface{}) error {
+	switch typ {
+	case EOSIO:
+		r, ok := rsp.(*eosio.PushTransactionFullResp)
+		if !ok {
+			return ErrTypeErrToChain
+		}
+		return p.FromEOSIO(r)
+	case EOSForce:
+		r, ok := rsp.(*eosforce.PushTransactionFullResp)
+		if !ok {
+			return ErrTypeErrToChain
+		}
+		return p.FromEOSForce(r)
+	case FORCEIO:
+		r, ok := rsp.(*forceio.PushTransactionFullResp)
+		if !ok {
+			return ErrTypeErrToChain
+		}
+		return p.FromForceio(r)
+	default:
+		return ErrNoSupportChain
+	}
 }
 
 type InfoResp struct {
@@ -144,4 +189,29 @@ func (i *InfoResp) FromEOSForce(info *eosforce.InfoResp) error {
 	i.ServerVersionString = info.ServerVersionString
 
 	return nil
+}
+
+func (i *InfoResp) From(typ ClientType, rsp interface{}) error {
+	switch typ {
+	case EOSIO:
+		r, ok := rsp.(*eosio.InfoResp)
+		if !ok {
+			return ErrTypeErrToChain
+		}
+		return i.FromEOSIO(r)
+	case EOSForce:
+		r, ok := rsp.(*eosforce.InfoResp)
+		if !ok {
+			return ErrTypeErrToChain
+		}
+		return i.FromEOSForce(r)
+	case FORCEIO:
+		r, ok := rsp.(*forceio.InfoResp)
+		if !ok {
+			return ErrTypeErrToChain
+		}
+		return i.FromForceio(r)
+	default:
+		return ErrNoSupportChain
+	}
 }
