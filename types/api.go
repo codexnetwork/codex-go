@@ -49,6 +49,20 @@ type SwitcherInterface interface {
 	BlockToCommon(r interface{}) (*BlockGeneralInfo, error)
 }
 
+// NewSwitcherInterface create SwitcherInterface by typ
+func NewSwitcherInterface(typ ClientType) SwitcherInterface {
+	switch typ {
+	case FORCEIO:
+		return &switcher2FORCEIO{}
+	case EOSIO:
+		return &switcher2EOSIO{}
+	case EOSForce:
+		return &switcher2EOSForce{}
+	default:
+		panic(ErrNoSupportChain)
+	}
+}
+
 var (
 	ErrTypeErrToChain = errors.New("ErrTypeErrToChain")
 	ErrNoSupportChain = errors.New("ErrNoSupportChain")
