@@ -8,7 +8,7 @@ type switcher2EOSForce struct {
 }
 
 func (s switcher2EOSForce) Type() ClientType {
-	return EOSIO
+	return EOSForce
 }
 
 func (s switcher2EOSForce) NameFromCommon(n string) interface{} {

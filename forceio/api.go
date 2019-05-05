@@ -17,7 +17,7 @@ type API struct {
 
 func (api *API) Init(cfg *config.ConfigData) error {
 	api.API = eos.New(cfg.URL)
-	api.typ = types.EOSForce
+	api.typ = types.FORCEIO
 	api.switcher = types.NewSwitcherInterface(api.typ)
 
 	err := api.Cfg.Parse(cfg)
