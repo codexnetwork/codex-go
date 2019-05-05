@@ -2,6 +2,7 @@ package types
 
 import (
 	"encoding/json"
+	"strings"
 	"time"
 
 	"github.com/fanyang1988/force-go/config"
@@ -21,6 +22,54 @@ const (
 	TLOS    // no support now
 	MEETONE // no support now
 )
+
+func (c ClientType) String() string {
+	switch c {
+	case FORCEIO:
+		return "FORCEIO"
+	case EOSForce:
+		return "EOSForce"
+	case Codex:
+		return "Codex"
+	case EOSIO:
+		return "EOSIO"
+	case ENU:
+		return "ENU"
+	case BOS:
+		return "BOS"
+	case TLOS:
+		return "TLOS"
+	case MEETONE:
+		return "MEETONE"
+	default:
+		return "Nil"
+	}
+}
+
+// String2ClientType string to clientType
+func String2ClientType(str string) ClientType {
+	s := strings.ToLower(str)
+	switch s {
+	case "forceio":
+		return FORCEIO
+	case "eosforce":
+		return EOSForce
+	case "codex":
+		return Codex
+	case "eosio":
+		return EOSIO
+	case "enu":
+		return ENU
+	case "bos":
+		return BOS
+	case "tlos":
+		return TLOS
+	case "meetone":
+		return MEETONE
+	}
+
+	return ClientTypeNil
+}
 
 // ClientInterface client interface for all client
 type ClientInterface interface {
