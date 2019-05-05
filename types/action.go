@@ -31,6 +31,7 @@ type Action struct {
 	Name          string
 	Authorization []PermissionLevel
 	Data          interface{}
+	HexData       []byte
 }
 
 type PermissionLevel struct {
@@ -51,6 +52,7 @@ func (a *Action) FromForceio(act *forceio.Action) error {
 	}
 
 	a.Data = act.Data
+	a.HexData = []byte(act.HexData)
 
 	return nil
 }
@@ -68,7 +70,7 @@ func (a *Action) FromEOSIO(act *eosio.Action) error {
 	}
 
 	a.Data = act.Data
-
+	a.HexData = []byte(act.HexData)
 	return nil
 }
 
@@ -85,7 +87,7 @@ func (a *Action) FromEOSForce(act *eosforce.Action) error {
 	}
 
 	a.Data = act.Data
-
+	a.HexData = []byte(act.HexData)
 	return nil
 }
 
