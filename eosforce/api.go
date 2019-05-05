@@ -91,13 +91,14 @@ func (api *API) GetBlockDataByID(id string) (*types.BlockGeneralInfo, error) {
 		return nil, err
 	}
 
-	res, err := api.switcher.BlockToCommon(rsp)
+	res, err := api.switcher.BlockRspToCommon(rsp)
 	if err != nil {
 		return nil, err
 	}
 	// fix id err
-	res.ID = types.Checksum256(rsp.ID)
-	return res, err
+	res.BlockGeneralInfo.ID = types.Checksum256(rsp.ID)
+	res.BlockGeneralInfo.BlockNum = rsp.BlockNum
+	return &res.BlockGeneralInfo, err
 }
 func (api *API) GetBlockDataByNum(num uint32) (*types.BlockGeneralInfo, error) {
 	rsp, err := api.GetBlockByNum(num)
@@ -105,13 +106,14 @@ func (api *API) GetBlockDataByNum(num uint32) (*types.BlockGeneralInfo, error) {
 		return nil, err
 	}
 
-	res, err := api.switcher.BlockToCommon(rsp)
+	res, err := api.switcher.BlockRspToCommon(rsp)
 	if err != nil {
 		return nil, err
 	}
 	// fix id err
-	res.ID = types.Checksum256(rsp.ID)
-	return res, err
+	res.BlockGeneralInfo.ID = types.Checksum256(rsp.ID)
+	res.BlockGeneralInfo.BlockNum = rsp.BlockNum
+	return &res.BlockGeneralInfo, err
 }
 
 func (api *API) Name(n string) interface{} {

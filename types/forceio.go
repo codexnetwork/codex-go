@@ -161,3 +161,25 @@ func (s switcher2FORCEIO) BlockToCommon(r interface{}) (*BlockGeneralInfo, error
 
 	return b, nil
 }
+
+func (s switcher2FORCEIO) BlockRspToCommon(r interface{}) (*BlockResp, error) {
+	b := &BlockResp{}
+
+	block, ok := r.(*chain.BlockResp)
+	if !ok {
+		return nil, ErrTypeErrToChain
+	}
+
+	blockInRsp, err := s.BlockToCommon(&block.SignedBlock)
+	if err != nil {
+		return nil, err
+	}
+
+	b.BlockGeneralInfo = *blockInRsp
+
+	b.ID = Checksum256(block.ID)
+	b.BlockNum = block.BlockNum
+	b.RefBlockPrefix = block.RefBlockPrefix
+
+	return b, nil
+}

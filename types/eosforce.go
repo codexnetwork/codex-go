@@ -24,6 +24,7 @@ func (s switcher2EOSForce) PushTransactionFullRespToCommon(r interface{}) (*Push
 
 	rsp, ok := r.(*chain.PushTransactionFullResp)
 	if !ok {
+		panic(ErrTypeErrToChain)
 		return nil, ErrTypeErrToChain
 	}
 
@@ -40,6 +41,7 @@ func (s switcher2EOSForce) InfoRespToCommon(r interface{}) (*InfoResp, error) {
 
 	info, ok := r.(*chain.InfoResp)
 	if !ok {
+		panic(ErrTypeErrToChain)
 		return nil, ErrTypeErrToChain
 	}
 
@@ -80,6 +82,7 @@ func (s switcher2EOSForce) TransactionToCommon(r interface{}) (*TransactionGener
 
 	trx, ok := r.(*chain.TransactionWithID)
 	if !ok {
+		panic(ErrTypeErrToChain)
 		return nil, ErrTypeErrToChain
 	}
 
@@ -158,6 +161,28 @@ func (s switcher2EOSForce) BlockToCommon(r interface{}) (*BlockGeneralInfo, erro
 			Transaction:          *t,
 		})
 	}
+
+	return b, nil
+}
+
+func (s switcher2EOSForce) BlockRspToCommon(r interface{}) (*BlockResp, error) {
+	b := &BlockResp{}
+
+	block, ok := r.(*chain.BlockResp)
+	if !ok {
+		return nil, ErrTypeErrToChain
+	}
+
+	blockInRsp, err := s.BlockToCommon(&block.SignedBlock)
+	if err != nil {
+		return nil, err
+	}
+
+	b.BlockGeneralInfo = *blockInRsp
+
+	b.ID = Checksum256(block.ID)
+	b.BlockNum = block.BlockNum
+	b.RefBlockPrefix = block.RefBlockPrefix
 
 	return b, nil
 }

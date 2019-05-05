@@ -34,3 +34,10 @@ type TransactionReceipt struct {
 	NetUsageWords        uint32                 `json:"net_usage_words"`
 	Transaction          TransactionGeneralInfo `json:"trx"`
 }
+
+type BlockResp struct {
+	BlockGeneralInfo
+	ID             Checksum256 `json:"id"`
+	BlockNum       uint32      `json:"block_num"`
+	RefBlockPrefix uint32      `json:"ref_block_prefix"`
+}

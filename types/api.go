@@ -87,6 +87,7 @@ type SwitcherInterface interface {
 	NameFromCommon(n string) interface{}
 	Checksum256FromCommon(c Checksum256) interface{}
 	PushTransactionFullRespToCommon(r interface{}) (*PushTransactionFullResp, error)
+	BlockRspToCommon(r interface{}) (*BlockResp, error)
 	InfoRespToCommon(r interface{}) (*InfoResp, error)
 	ActionToCommon(d interface{}) (*Action, error)
 	ActionFromCommon(d *Action) (interface{}, error)
