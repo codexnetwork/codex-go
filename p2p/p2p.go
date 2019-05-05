@@ -31,13 +31,17 @@ type P2PInitParams struct {
 	ClientID   string `json:"clientID"`
 	Peers      []string
 	StartBlock *P2PSyncData
-	logger     *zap.Logger
+	Logger     *zap.Logger
 }
 
 func NewP2PClient(typ types.ClientType, params P2PInitParams) ClientInterface {
+	if params.Logger == nil {
+		params.Logger = zap.NewNop()
+	}
+
 	switch typ {
 	case types.EOSForce:
-		return NewP2PClient4EOSForce(params.Name, params.ClientID, params.StartBlock, params.Peers, params.logger)
+		return NewP2PClient4EOSForce(params.Name, params.ClientID, params.StartBlock, params.Peers, params.Logger)
 	default:
 		panic(errors.New("no support type for p2p"))
 	}
