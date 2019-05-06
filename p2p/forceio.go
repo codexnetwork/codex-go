@@ -186,7 +186,7 @@ func (p *p2pForceioClient) Loop() bool {
 	return false
 }
 
-func (p *p2pForceioClient) handleImp(envelopeForceio *EnvelopeForceio) {
+func (p *p2pForceioClient) handleImp(envelope *EnvelopeForceio) {
 	for _, h := range p.handlers {
 		func(hh types.P2PHandler) {
 			defer func() {
@@ -198,23 +198,30 @@ func (p *p2pForceioClient) handleImp(envelopeForceio *EnvelopeForceio) {
 			}()
 
 			var err error
-			switch envelopeForceio.Packet.Type {
+			switch envelope.Packet.Type {
 			case eos.GoAwayMessageType:
-				m, ok := envelopeForceio.Packet.P2PMessage.(*eos.GoAwayMessage)
+				m, ok := envelope.Packet.P2PMessage.(*eos.GoAwayMessage)
 				if !ok {
 					p.logger.Error("msg type err by go away")
 					return
 				}
-				err = hh.OnGoAway(envelopeForceio.Peer, uint8(m.Reason), types.Checksum256(m.NodeID))
+				p.logger.Info("peer goaway",
+					zap.String("peer", envelope.Peer),
+					zap.String("reason", m.Reason.String()),
+					zap.String("nodeid", m.NodeID.String()))
+				err = hh.OnGoAway(envelope.Peer, uint8(m.Reason), types.Checksum256(m.NodeID))
 			case eos.SignedBlockType:
-				m, ok := envelopeForceio.Packet.P2PMessage.(*eos.SignedBlock)
+				m, ok := envelope.Packet.P2PMessage.(*eos.SignedBlock)
 				if !ok {
 					p.logger.Error("msg type err by go away")
 					return
 				}
+				p.logger.Debug("on signed block",
+					zap.String("peer", envelope.Peer),
+					zap.String("block", m.String()))
 				msg, err := p.switcher.BlockToCommon(m)
 				if err == nil {
-					err = hh.OnBlock(envelopeForceio.Peer, msg)
+					err = hh.OnBlock(envelope.Peer, msg)
 				}
 			}
 
@@ -227,10 +234,10 @@ func (p *p2pForceioClient) handleImp(envelopeForceio *EnvelopeForceio) {
 }
 
 // Handle handler for p2p clients
-func (p *p2pForceioClient) Handle(envelopeForceio *p2p.Envelope) {
+func (p *p2pForceioClient) Handle(envelope *p2p.Envelope) {
 	p.msgChan <- EnvelopeForceio{
-		Peer:   envelopeForceio.Sender.Address,
-		Packet: *envelopeForceio.Packet,
+		Peer:   envelope.Sender.Address,
+		Packet: *envelope.Packet,
 	}
 }
 

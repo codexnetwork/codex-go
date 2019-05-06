@@ -205,6 +205,10 @@ func (p *p2pEOSForceClient) handleImp(envelope *Envelope) {
 					p.logger.Error("msg type err by go away")
 					return
 				}
+				p.logger.Info("peer goaway",
+					zap.String("peer", envelope.Peer),
+					zap.String("reason", m.Reason.String()),
+					zap.String("nodeid", m.NodeID.String()))
 				err = hh.OnGoAway(envelope.Peer, uint8(m.Reason), types.Checksum256(m.NodeID))
 			case eos.SignedBlockType:
 				m, ok := envelope.Packet.P2PMessage.(*eos.SignedBlock)
@@ -212,6 +216,9 @@ func (p *p2pEOSForceClient) handleImp(envelope *Envelope) {
 					p.logger.Error("msg type err by go away")
 					return
 				}
+				p.logger.Debug("on signed block",
+					zap.String("peer", envelope.Peer),
+					zap.String("block", m.String()))
 				msg, err := p.switcher.BlockToCommon(m)
 				if err == nil {
 					err = hh.OnBlock(envelope.Peer, msg)
