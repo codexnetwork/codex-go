@@ -222,7 +222,10 @@ func (p *p2pEOSForceClient) handleImp(envelope *Envelope) {
 				msg, err := p.switcher.BlockToCommon(m)
 				if err == nil {
 					err = hh.OnBlock(envelope.Peer, msg)
+				} else {
+					p.logger.Error("handle msg err", zap.Error(err))
 				}
+
 			}
 
 			if err != nil {

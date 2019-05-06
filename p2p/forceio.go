@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	eos "github.com/eosforce/goeosforce"
-	"github.com/eosforce/goeosforce/p2p"
+	eos "github.com/eosforce/goforceio"
+	"github.com/eosforce/goforceio/p2p"
 	"github.com/fanyang1988/force-go/types"
 	"go.uber.org/zap"
 )
@@ -222,6 +222,8 @@ func (p *p2pForceioClient) handleImp(envelope *EnvelopeForceio) {
 				msg, err := p.switcher.BlockToCommon(m)
 				if err == nil {
 					err = hh.OnBlock(envelope.Peer, msg)
+				} else {
+					p.logger.Error("handle msg err", zap.Error(err))
 				}
 			}
 
