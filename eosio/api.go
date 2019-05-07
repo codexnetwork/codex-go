@@ -129,3 +129,7 @@ func (api *API) Asset(a *types.Asset) interface{} {
 		},
 	}
 }
+
+func (api *API) Type() types.ClientType {
+	return api.typ
+}
