@@ -79,6 +79,7 @@ type ClientInterface interface {
 	GetBlockDataByID(id string) (*BlockGeneralInfo, error)
 	GetBlockDataByNum(num uint32) (*BlockGeneralInfo, error)
 	Name(n string) interface{}
+	Asset(a *Asset) interface{}
 }
 
 // SwitcherInterface a interface for diff chain type transfer to common
@@ -146,4 +147,14 @@ type InfoResp struct {
 	BlockCPULimit            int64       `json:"block_cpu_limit"`
 	BlockNetLimit            int64       `json:"block_net_limit"`
 	ServerVersionString      string      `json:"server_version_string"`
+}
+
+type Asset struct {
+	Amount int64
+	Symbol
+}
+
+type Symbol struct {
+	Precision uint8
+	Symbol    string
 }

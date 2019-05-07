@@ -119,3 +119,13 @@ func (api *API) GetBlockDataByNum(num uint32) (*types.BlockGeneralInfo, error) {
 func (api *API) Name(n string) interface{} {
 	return eos.Name(n)
 }
+
+func (api *API) Asset(a *types.Asset) interface{} {
+	return eos.Asset{
+		Amount: eos.Int64(a.Amount),
+		Symbol: eos.Symbol{
+			Precision: a.Symbol.Precision,
+			Symbol:    a.Symbol.Symbol,
+		},
+	}
+}
