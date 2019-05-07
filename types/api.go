@@ -74,6 +74,7 @@ func String2ClientType(str string) ClientType {
 // ClientInterface client interface for all client
 type ClientInterface interface {
 	Type() ClientType
+	Switcher() SwitcherInterface
 	Init(cfg *config.ConfigData) error
 	PushActions(actions ...*Action) (*PushTransactionFullResp, error)
 	GetInfoData() (*InfoResp, error)
