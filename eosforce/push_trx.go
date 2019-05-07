@@ -51,6 +51,8 @@ func pushEOSCActionsAndContextFreeActions(api *API, contextFreeActions []*eos.Ac
 	}
 
 	tx := eos.NewTransaction(actions, opts)
+	tx.Fee = eos.NewEOSAsset(10000)
+
 	if len(contextFreeActions) > 0 {
 		tx.ContextFreeActions = contextFreeActions
 	}

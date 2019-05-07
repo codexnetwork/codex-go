@@ -10,21 +10,21 @@ import (
 
 // ConfigSigner singer with use config keys
 type ConfigSigner struct {
-	Keys []*ecc.PrivateKey `json:"keys"`
+	Keys []ecc.PrivateKey `json:"keys"`
 	api  *API
 }
 
 // NewConfigSigner create config signer with keys in config in api
 func NewConfigSigner(api *API) *ConfigSigner {
 	res := &ConfigSigner{
-		Keys: make([]*ecc.PrivateKey, 0),
+		Keys: make([]ecc.PrivateKey, 0),
 		api:  api,
 	}
 	for _, k := range api.Cfg.Keys {
-		res.Keys = append(res.Keys, &k.PriKey)
+		res.Keys = append(res.Keys, k.PriKey)
 	}
 	for _, k := range api.Cfg.Prikeys {
-		res.Keys = append(res.Keys, &k)
+		res.Keys = append(res.Keys, k)
 	}
 	return res
 }
@@ -34,7 +34,7 @@ func (c *ConfigSigner) add(wifKey string) error {
 	if err != nil {
 		return err
 	}
-	c.Keys = append(c.Keys, privKey)
+	c.Keys = append(c.Keys, *privKey)
 	return nil
 }
 
@@ -81,7 +81,7 @@ func (c *ConfigSigner) Sign(tx *eos.SignedTransaction, chainID []byte, requiredK
 func (c *ConfigSigner) keyMap() map[string]*ecc.PrivateKey {
 	out := map[string]*ecc.PrivateKey{}
 	for _, key := range c.Keys {
-		out[key.PublicKey().String()] = key
+		out[key.PublicKey().String()] = &key
 	}
 	return out
 }
