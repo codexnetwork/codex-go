@@ -41,7 +41,7 @@ type p2pClientImp struct {
 	handlerImp p2pHandlerInterface
 }
 
-func (p *p2pClientImp) init(name string, typ types.ClientType, chainID string, startBlock *P2PSyncData, peers []string, logger *zap.Logger) {
+func (p *p2pClientImp) init(name string, typ types.ClientType, chainID string, peers []string, logger *zap.Logger) {
 	p.name = name
 	p.clients = make([]p2pClientInterface, 0, len(peers))
 	p.handlers = make([]types.P2PHandler, 0, 8)
