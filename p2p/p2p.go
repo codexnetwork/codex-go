@@ -44,6 +44,8 @@ func NewP2PClient(typ types.ClientType, params P2PInitParams) ClientInterface {
 		return NewP2PClient4EOSForce(params.Name, params.ClientID, params.StartBlock, params.Peers, params.Logger)
 	case types.FORCEIO:
 		return NewP2PClient4Forceio(params.Name, params.ClientID, params.StartBlock, params.Peers, params.Logger)
+	case types.EOSIO:
+		return NewP2PClient4EOS(params.Name, params.ClientID, params.StartBlock, params.Peers, params.Logger)
 	default:
 		panic(errors.New("no support type for p2p"))
 	}
