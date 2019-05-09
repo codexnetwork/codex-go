@@ -6,24 +6,24 @@ import (
 	"runtime/debug"
 	"time"
 
-	eos "github.com/eosforce/goforceio"
-	"github.com/eosforce/goforceio/p2p"
+	eos "github.com/eosforce/goeosforce"
+	"github.com/eosforce/goeosforce/p2p"
 	"github.com/fanyang1988/force-go/types"
 	"go.uber.org/zap"
 )
 
-// p2pForceioClient a manager for peers to diff p2p node
-type p2pForceioClient struct {
+// p2pEOSClient a manager for peers to diff p2p node
+type p2pEOSClient struct {
 	*p2pClientImp
 }
 
 // NewP2PPeers new p2p peers from cfg
-func NewP2PClient4Forceio(name string, chainID string, startBlock *P2PSyncData, peers []string, logger *zap.Logger) *p2pForceioClient {
-	p := &p2pForceioClient{
+func NewP2PClient4EOS(name string, chainID string, startBlock *P2PSyncData, peers []string, logger *zap.Logger) *p2pEOSClient {
+	p := &p2pEOSClient{
 		&p2pClientImp{},
 	}
 
-	p.init(name, types.FORCEIO, chainID, startBlock, peers, logger)
+	p.init(name, types.EOSIO, chainID, startBlock, peers, logger)
 	p.setHandlerImp(p)
 
 	cID, err := hex.DecodeString(chainID)
@@ -64,7 +64,7 @@ func NewP2PClient4Forceio(name string, chainID string, startBlock *P2PSyncData, 
 	return p
 }
 
-func (p *p2pForceioClient) handleImp(m p2pClientMsg) {
+func (p *p2pEOSClient) handleImp(m p2pClientMsg) {
 	peer := m.peer
 	pkg, ok := m.msg.(*eos.Packet)
 	if !ok {
@@ -121,7 +121,7 @@ func (p *p2pForceioClient) handleImp(m p2pClientMsg) {
 }
 
 // Handle handler for p2p clients
-func (p *p2pForceioClient) Handle(envelope *p2p.Envelope) {
+func (p *p2pEOSClient) Handle(envelope *p2p.Envelope) {
 	p.onMsg(p2pClientMsg{
 		peer: envelope.Sender.Address,
 		msg:  envelope.Packet,
