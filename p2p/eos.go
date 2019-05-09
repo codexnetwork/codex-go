@@ -4,7 +4,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"runtime/debug"
-	"sync"
 	"time"
 
 	eos "github.com/eosforce/goeosforce"
@@ -13,24 +12,9 @@ import (
 	"go.uber.org/zap"
 )
 
-type Envelope4EOS struct {
-	Peer    string     `json:"peer"`
-	Packet  eos.Packet `json:"packet"`
-	IsClose bool
-}
-
 // p2pEOSClient a manager for peers to diff p2p node
 type p2pEOSClient struct {
-	name      string
-	clients   []*p2p.Client
-	handlers  []types.P2PHandler
-	msgChan   chan Envelope4EOS
-	wg        sync.WaitGroup
-	chanWg    sync.WaitGroup
-	switcher  types.SwitcherInterface
-	hasClosed bool
-	mutex     sync.RWMutex
-	logger    *zap.Logger
+	*p2pClientImp
 }
 
 func (p *p2pEOSClient) Type() types.ClientType {
@@ -40,14 +24,11 @@ func (p *p2pEOSClient) Type() types.ClientType {
 // NewP2PPeers new p2p peers from cfg
 func NewP2PClient4EOS(name string, chainID string, startBlock *P2PSyncData, peers []string, logger *zap.Logger) *p2pEOSClient {
 	p := &p2pEOSClient{
-		name:     name,
-		clients:  make([]*p2p.Client, 0, len(peers)),
-		handlers: make([]types.P2PHandler, 0, 8),
-		msgChan:  make(chan Envelope4EOS, 64),
-		logger:   logger,
+		&p2pClientImp{},
 	}
 
-	p.switcher = types.NewSwitcherInterface(p.Type())
+	p.init(name, p.Type(), chainID, startBlock, peers, logger)
+	p.setHandlerImp(p)
 
 	cID, err := hex.DecodeString(chainID)
 	if err != nil {
@@ -87,102 +68,14 @@ func NewP2PClient4EOS(name string, chainID string, startBlock *P2PSyncData, peer
 	return p
 }
 
-func (p *p2pEOSClient) Start() error {
-	p.chanWg.Add(1)
-	go func() {
-		defer p.chanWg.Done()
-		for {
-			isStop := p.Loop()
-			if isStop {
-				p.logger.Info("p2p peers stop")
-				return
-			}
-		}
-	}()
-
-	for idx, client := range p.clients {
-		p.createClient(idx, client)
-	}
-
-	return nil
-}
-
-func (p *p2pEOSClient) IsClosed() bool {
-	p.mutex.RLock()
-	defer p.mutex.RUnlock()
-	return p.hasClosed
-}
-
-func (p *p2pEOSClient) createClient(idx int, client *p2p.Client) {
-	p.wg.Add(1)
-	go func() {
-		defer p.wg.Done()
-		for {
-			p.logger.Info("create connect", zap.Int("client", idx))
-			err := client.Start()
-
-			// check when after close client
-			if p.IsClosed() {
-				return
-			}
-
-			if err != nil {
-				p.logger.Error("client err", zap.Int("client", idx), zap.Error(err))
-			}
-
-			time.Sleep(3 * time.Second)
-
-			// check when after sleep
-			if p.IsClosed() {
-				return
-			}
-		}
-	}()
-}
-
-func (p *p2pEOSClient) CloseConnection() error {
-	p.logger.Warn("start close")
-
-	p.mutex.Lock()
-	p.hasClosed = true
-	p.mutex.Unlock()
-
-	for idx, client := range p.clients {
-		go func(i int, cli *p2p.Client) {
-			err := cli.CloseConnection()
-			if err != nil {
-				p.logger.Error("client close err", zap.Int("client", i), zap.Error(err))
-			}
-			p.logger.Info("client close", zap.Int("client", i))
-		}(idx, client)
-	}
-	p.wg.Wait()
-	p.msgChan <- Envelope4EOS{
-		IsClose: true,
-	}
-	close(p.msgChan)
-	p.chanWg.Wait()
-
-	return nil
-}
-
-func (p *p2pEOSClient) Loop() bool {
-	ev, ok := <-p.msgChan
-	if ev.IsClose {
-		return true
-	}
-
+func (p *p2pEOSClient) handleImp(m p2pClientMsg) {
+	peer := m.peer
+	pkg, ok := m.msg.(*eos.Packet)
 	if !ok {
-		p.logger.Warn("p2p peers msg chan closed")
-		return true
+		p.logger.Error("packet type err")
+		return
 	}
 
-	p.handleImp(&ev)
-
-	return false
-}
-
-func (p *p2pEOSClient) handleImp(envelope *Envelope4EOS) {
 	for _, h := range p.handlers {
 		func(hh types.P2PHandler) {
 			defer func() {
@@ -194,34 +87,33 @@ func (p *p2pEOSClient) handleImp(envelope *Envelope4EOS) {
 			}()
 
 			var err error
-			switch envelope.Packet.Type {
+			switch pkg.Type {
 			case eos.GoAwayMessageType:
-				m, ok := envelope.Packet.P2PMessage.(*eos.GoAwayMessage)
+				m, ok := pkg.P2PMessage.(*eos.GoAwayMessage)
 				if !ok {
 					p.logger.Error("msg type err by go away")
 					return
 				}
 				p.logger.Info("peer goaway",
-					zap.String("peer", envelope.Peer),
+					zap.String("peer", peer),
 					zap.String("reason", m.Reason.String()),
 					zap.String("nodeid", m.NodeID.String()))
-				err = hh.OnGoAway(envelope.Peer, uint8(m.Reason), types.Checksum256(m.NodeID))
+				err = hh.OnGoAway(peer, uint8(m.Reason), types.Checksum256(m.NodeID))
 			case eos.SignedBlockType:
-				m, ok := envelope.Packet.P2PMessage.(*eos.SignedBlock)
+				m, ok := pkg.P2PMessage.(*eos.SignedBlock)
 				if !ok {
 					p.logger.Error("msg type err by go away")
 					return
 				}
 				p.logger.Debug("on signed block",
-					zap.String("peer", envelope.Peer),
+					zap.String("peer", peer),
 					zap.String("block", m.String()))
 				msg, err := p.switcher.BlockToCommon(m)
 				if err == nil {
-					err = hh.OnBlock(envelope.Peer, msg)
+					err = hh.OnBlock(peer, msg)
 				} else {
 					p.logger.Error("handle msg err", zap.Error(err))
 				}
-
 			}
 
 			if err != nil {
@@ -234,22 +126,8 @@ func (p *p2pEOSClient) handleImp(envelope *Envelope4EOS) {
 
 // Handle handler for p2p clients
 func (p *p2pEOSClient) Handle(envelope *p2p.Envelope) {
-	p.msgChan <- Envelope4EOS{
-		Peer:   envelope.Sender.Address,
-		Packet: *envelope.Packet,
-	}
-}
-
-func (p *p2pEOSClient) RegHandler(handler types.P2PHandler) {
-	p.mutex.RLock()
-	defer p.mutex.RUnlock()
-	p.handlers = append(p.handlers, handler)
-}
-
-func (p *p2pEOSClient) SetReadTimeout(readTimeout time.Duration) {
-	p.mutex.RLock()
-	defer p.mutex.RUnlock()
-	for _, peer := range p.clients {
-		peer.SetReadTimeout(readTimeout)
-	}
+	p.onMsg(p2pClientMsg{
+		peer: envelope.Sender.Address,
+		msg:  envelope.Packet,
+	})
 }
