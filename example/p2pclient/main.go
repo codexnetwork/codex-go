@@ -59,20 +59,14 @@ func main() {
 		peers = append(peers, *p2pAddress)
 	}
 
-	var stratBlock *p2p.P2PSyncData
-	if *startNum != 0 {
-		stratBlock = &p2p.P2PSyncData{
-			HeadBlockNum: uint32(*startNum),
-		}
-		log.Logger().Sugar().Infof("start %v", *stratBlock)
-	}
+	log.Logger().Sugar().Infof("start %v", *startNum)
 
 	p2pPeers := p2p.NewP2PClient(types.FORCEIO, p2p.P2PInitParams{
-		Name:       "testNode",
-		ClientID:   *chainID,
-		StartBlock: stratBlock,
-		Peers:      peers[:],
-		Logger:     log.Logger(),
+		Name:          "testNode",
+		ClientID:      *chainID,
+		StartBlockNum: uint32(*startNum),
+		Peers:         peers[:],
+		Logger:        log.Logger(),
 	})
 
 	p2pPeers.RegHandler(&handlerImp{})

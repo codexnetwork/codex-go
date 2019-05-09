@@ -18,20 +18,13 @@ type ClientInterface interface {
 	RegHandler(handler types.P2PHandler)
 }
 
-type P2PSyncData struct {
-	HeadBlockNum             uint32
-	HeadBlockID              types.Checksum256
-	HeadBlockTime            time.Time
-	LastIrreversibleBlockNum uint32
-	LastIrreversibleBlockID  types.Checksum256
-}
-
+// P2PInitParams init params for P2P client
 type P2PInitParams struct {
-	Name       string `json:"name"`
-	ClientID   string `json:"clientID"`
-	Peers      []string
-	StartBlock *P2PSyncData
-	Logger     *zap.Logger
+	Name          string   `json:"name"`
+	ClientID      string   `json:"clientID"`
+	Peers         []string `json:"peers"`
+	StartBlockNum uint32   `json:"start"`
+	Logger        *zap.Logger
 }
 
 func NewP2PClient(typ types.ClientType, params P2PInitParams) ClientInterface {
@@ -41,11 +34,11 @@ func NewP2PClient(typ types.ClientType, params P2PInitParams) ClientInterface {
 
 	switch typ {
 	case types.EOSForce:
-		return NewP2PClient4EOSForce(params.Name, params.ClientID, params.StartBlock, params.Peers, params.Logger)
+		return NewP2PClient4EOSForce(params.Name, params.ClientID, params.StartBlockNum, params.Peers, params.Logger)
 	case types.FORCEIO:
-		return NewP2PClient4Forceio(params.Name, params.ClientID, params.StartBlock, params.Peers, params.Logger)
+		return NewP2PClient4Forceio(params.Name, params.ClientID, params.StartBlockNum, params.Peers, params.Logger)
 	case types.EOSIO:
-		return NewP2PClient4EOS(params.Name, params.ClientID, params.StartBlock, params.Peers, params.Logger)
+		return NewP2PClient4EOS(params.Name, params.ClientID, params.StartBlockNum, params.Peers, params.Logger)
 	default:
 		panic(errors.New("no support type for p2p"))
 	}

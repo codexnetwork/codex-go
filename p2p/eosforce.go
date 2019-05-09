@@ -4,7 +4,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"runtime/debug"
-	"time"
 
 	eos "github.com/eosforce/goeosforce"
 	"github.com/eosforce/goeosforce/p2p"
@@ -18,12 +17,12 @@ type p2pEOSForceClient struct {
 }
 
 // NewP2PPeers new p2p peers from cfg
-func NewP2PClient4EOSForce(name string, chainID string, startBlock *P2PSyncData, peers []string, logger *zap.Logger) *p2pEOSForceClient {
+func NewP2PClient4EOSForce(name string, chainID string, startBlock uint32, peers []string, logger *zap.Logger) *p2pEOSForceClient {
 	p := &p2pEOSForceClient{
 		&p2pClientImp{},
 	}
 
-	p.init(name, types.EOSForce, chainID, startBlock, peers, logger)
+	p.init(name, types.EOSForce, chainID, peers, logger)
 	p.setHandlerImp(p)
 
 	cID, err := hex.DecodeString(chainID)
@@ -32,28 +31,12 @@ func NewP2PClient4EOSForce(name string, chainID string, startBlock *P2PSyncData,
 		panic(err)
 	}
 
-	var startBlockNum uint32 = 1
-	var startBlockId eos.Checksum256
-	var startBlockTime time.Time
-	var irrBlockNum uint32 = 0
-	var irrBlockId eos.Checksum256
-	if startBlock != nil {
-		startBlockId = eos.Checksum256(startBlock.HeadBlockID)
-		startBlockNum = startBlock.HeadBlockNum
-		startBlockTime = startBlock.HeadBlockTime
-		irrBlockNum = startBlock.LastIrreversibleBlockNum
-		irrBlockId = eos.Checksum256(startBlock.LastIrreversibleBlockID)
-	}
 	for idx, peer := range peers {
 		p.logger.Debug("new peer client", zap.Int("idx", idx), zap.String("peer", peer))
 		client := p2p.NewClient(
 			p2p.NewOutgoingPeer(peer, fmt.Sprintf("%s-%02d", name, idx), &p2p.HandshakeInfo{
-				ChainID:                  cID,
-				HeadBlockNum:             startBlockNum,
-				HeadBlockID:              startBlockId,
-				HeadBlockTime:            startBlockTime,
-				LastIrreversibleBlockNum: irrBlockNum,
-				LastIrreversibleBlockID:  irrBlockId,
+				ChainID:      cID,
+				HeadBlockNum: startBlock,
 			}),
 			true,
 		)
