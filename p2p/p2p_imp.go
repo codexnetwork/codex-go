@@ -37,6 +37,7 @@ type p2pClientImp struct {
 	mutex     sync.RWMutex
 	logger    *zap.Logger
 
+	typ        types.ClientType
 	handlerImp p2pHandlerInterface
 }
 
@@ -47,11 +48,16 @@ func (p *p2pClientImp) init(name string, typ types.ClientType, chainID string, s
 	p.msgChan = make(chan p2pClientMsg, 4096)
 	p.logger = logger
 
+	p.typ = typ
 	p.switcher = types.NewSwitcherInterface(typ)
 }
 
 func (p *p2pClientImp) setHandlerImp(h p2pHandlerInterface) {
 	p.handlerImp = h
+}
+
+func (p *p2pClientImp) Type() types.ClientType {
+	return p.typ
 }
 
 func (p *p2pClientImp) Start() error {

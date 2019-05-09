@@ -17,17 +17,13 @@ type p2pForceioClient struct {
 	*p2pClientImp
 }
 
-func (p *p2pForceioClient) Type() types.ClientType {
-	return types.FORCEIO
-}
-
 // NewP2PPeers new p2p peers from cfg
 func NewP2PClient4Forceio(name string, chainID string, startBlock *P2PSyncData, peers []string, logger *zap.Logger) *p2pForceioClient {
 	p := &p2pForceioClient{
 		&p2pClientImp{},
 	}
 
-	p.init(name, p.Type(), chainID, startBlock, peers, logger)
+	p.init(name, types.FORCEIO, chainID, startBlock, peers, logger)
 	p.setHandlerImp(p)
 
 	cID, err := hex.DecodeString(chainID)

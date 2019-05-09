@@ -17,17 +17,13 @@ type p2pEOSForceClient struct {
 	*p2pClientImp
 }
 
-func (p *p2pEOSForceClient) Type() types.ClientType {
-	return types.EOSForce
-}
-
 // NewP2PPeers new p2p peers from cfg
 func NewP2PClient4EOSForce(name string, chainID string, startBlock *P2PSyncData, peers []string, logger *zap.Logger) *p2pEOSForceClient {
 	p := &p2pEOSForceClient{
 		&p2pClientImp{},
 	}
 
-	p.init(name, p.Type(), chainID, startBlock, peers, logger)
+	p.init(name, types.EOSForce, chainID, startBlock, peers, logger)
 	p.setHandlerImp(p)
 
 	cID, err := hex.DecodeString(chainID)

@@ -17,17 +17,13 @@ type p2pEOSClient struct {
 	*p2pClientImp
 }
 
-func (p *p2pEOSClient) Type() types.ClientType {
-	return types.EOSIO
-}
-
 // NewP2PPeers new p2p peers from cfg
 func NewP2PClient4EOS(name string, chainID string, startBlock *P2PSyncData, peers []string, logger *zap.Logger) *p2pEOSClient {
 	p := &p2pEOSClient{
 		&p2pClientImp{},
 	}
 
-	p.init(name, p.Type(), chainID, startBlock, peers, logger)
+	p.init(name, types.EOSIO, chainID, startBlock, peers, logger)
 	p.setHandlerImp(p)
 
 	cID, err := hex.DecodeString(chainID)
