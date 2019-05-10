@@ -2,9 +2,10 @@ package eosio
 
 import (
 	eos "github.com/eoscanada/eos-go"
+	"github.com/pkg/errors"
+
 	"github.com/fanyang1988/force-go/config"
 	"github.com/fanyang1988/force-go/types"
-	"github.com/pkg/errors"
 )
 
 // API client api to forceio chain
@@ -15,6 +16,7 @@ type API struct {
 	typ      types.ClientType
 }
 
+// Init init api by config
 func (api *API) Init(cfg *config.ConfigData) error {
 	api.API = eos.New(cfg.URL)
 	api.typ = types.EOSIO

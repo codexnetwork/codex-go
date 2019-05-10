@@ -7,8 +7,9 @@ import (
 
 	eos "github.com/eosforce/goeosforce"
 	"github.com/eosforce/goeosforce/p2p"
-	"github.com/fanyang1988/force-go/types"
 	"go.uber.org/zap"
+
+	"github.com/fanyang1988/force-go/types"
 )
 
 // p2pEOSForceClient a manager for peers to diff p2p node
@@ -16,7 +17,7 @@ type p2pEOSForceClient struct {
 	*p2pClientImp
 }
 
-// NewP2PPeers new p2p peers from cfg
+// NewP2PClient4EOSForce new p2p peers from cfg
 func NewP2PClient4EOSForce(name string, chainID string, startBlock uint32, peers []string, logger *zap.Logger) *p2pEOSForceClient {
 	p := &p2pEOSForceClient{
 		&p2pClientImp{},
@@ -76,7 +77,7 @@ func (p *p2pEOSForceClient) handleImp(m p2pClientMsg) {
 				p.logger.Info("peer goaway",
 					zap.String("peer", peer),
 					zap.String("reason", m.Reason.String()),
-					zap.String("nodeid", m.NodeID.String()))
+					zap.String("nodeId", m.NodeID.String()))
 				err = hh.OnGoAway(peer, uint8(m.Reason), types.Checksum256(m.NodeID))
 			case eos.SignedBlockType:
 				m, ok := pkg.P2PMessage.(*eos.SignedBlock)

@@ -1,12 +1,13 @@
 package force
 
 import (
-	"github.com/fanyang1988/force-go/config"
-	eosforceapi "github.com/fanyang1988/force-go/eosforce"
-	eosioapi "github.com/fanyang1988/force-go/eosio"
-	forceioapi "github.com/fanyang1988/force-go/forceio"
-	"github.com/fanyang1988/force-go/types"
 	"github.com/pkg/errors"
+
+	"github.com/fanyang1988/force-go/config"
+	eosforceApi "github.com/fanyang1988/force-go/eosforce"
+	eosioApi "github.com/fanyang1988/force-go/eosio"
+	forceioApi "github.com/fanyang1988/force-go/forceio"
+	"github.com/fanyang1988/force-go/types"
 )
 
 // Client client to forceio chain
@@ -15,15 +16,16 @@ type Client struct {
 	typ types.ClientType
 }
 
+// NewClientAPI create client to chain by typ
 func NewClientAPI(typ types.ClientType, cfg *config.ConfigData) (types.ClientInterface, error) {
 	var res types.ClientInterface
 	switch typ {
 	case types.FORCEIO:
-		res = &forceioapi.API{}
+		res = &forceioApi.API{}
 	case types.EOSIO:
-		res = &eosioapi.API{}
+		res = &eosioApi.API{}
 	case types.EOSForce:
-		res = &eosforceapi.API{}
+		res = &eosforceApi.API{}
 	default:
 		return nil, errors.New("unsupported api type")
 	}

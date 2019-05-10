@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// TransactionGeneralInfo Transaction data for each chain
 type TransactionGeneralInfo struct {
 	ID                 Checksum256
 	Expiration         time.Time `json:"expiration"`

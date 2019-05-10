@@ -6,7 +6,7 @@ import (
 
 // ConfigData JSON struct define to config
 type ConfigData struct {
-	ChainID string           `json:"chainid"`
+	ChainID string           `json:"chainId"`
 	URL     string           `json:"url"`
 	Keys    []accountKeyData `json:"keys"`
 	PriKeys []string         `json:"pri"`

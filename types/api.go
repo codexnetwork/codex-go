@@ -5,13 +5,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fanyang1988/force-go/config"
 	"github.com/pkg/errors"
+
+	"github.com/fanyang1988/force-go/config"
 )
 
+// ClientType chain client type
 type ClientType uint8
 
 const (
+	// ClientTypeNil nil type for chain
 	ClientTypeNil = ClientType(iota)
 	FORCEIO
 	EOSForce

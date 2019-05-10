@@ -7,8 +7,9 @@ import (
 
 	eos "github.com/eosforce/goforceio"
 	"github.com/eosforce/goforceio/p2p"
-	"github.com/fanyang1988/force-go/types"
 	"go.uber.org/zap"
+
+	"github.com/fanyang1988/force-go/types"
 )
 
 // p2pForceioClient a manager for peers to diff p2p node
@@ -76,7 +77,7 @@ func (p *p2pForceioClient) handleImp(m p2pClientMsg) {
 				p.logger.Info("peer goaway",
 					zap.String("peer", peer),
 					zap.String("reason", m.Reason.String()),
-					zap.String("nodeid", m.NodeID.String()))
+					zap.String("nodeId", m.NodeID.String()))
 				err = hh.OnGoAway(peer, uint8(m.Reason), types.Checksum256(m.NodeID))
 			case eos.SignedBlockType:
 				m, ok := pkg.P2PMessage.(*eos.SignedBlock)
