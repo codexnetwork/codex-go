@@ -99,6 +99,8 @@ type SwitcherInterface interface {
 	ActionFromCommon(d *Action) (interface{}, error)
 	TransactionToCommon(r interface{}) (*TransactionGeneralInfo, error)
 	BlockToCommon(r interface{}) (*BlockGeneralInfo, error)
+
+	UnpackTransferAction(raw []byte) (*TransferActionData, error)
 }
 
 // NewSwitcherInterface create SwitcherInterface by typ

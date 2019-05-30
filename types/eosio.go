@@ -84,6 +84,11 @@ func (s switcher2EOSIO) TransactionToCommon(r interface{}) (*TransactionGeneralI
 	}
 
 	t.ID = Checksum256(trx.ID)
+
+	if trx.Packed == nil {
+		return t, nil
+	}
+
 	trxData, err := trx.Packed.Unpack()
 	if err != nil {
 		return nil, err
@@ -182,4 +187,31 @@ func (s switcher2EOSIO) BlockRspToCommon(r interface{}) (*BlockResp, error) {
 	b.RefBlockPrefix = block.RefBlockPrefix
 
 	return b, nil
+}
+
+func (s switcher2EOSIO) UnpackTransferAction(raw []byte) (*TransferActionData, error) {
+	act := &struct {
+		From     chain.AccountName `json:"from"`
+		To       chain.AccountName `json:"to"`
+		Quantity chain.Asset       `json:"quantity"`
+		Memo     string            `json:"memo"`
+	}{}
+
+	decoder := chain.NewDecoder(raw)
+	if err := decoder.Decode(&act); err != nil {
+		return nil, err
+	}
+
+	return &TransferActionData{
+		From: string(act.From),
+		To:   string(act.To),
+		Quantity: Asset{
+			Amount: int64(act.Quantity.Amount),
+			Symbol: Symbol{
+				Precision: act.Quantity.Symbol.Precision,
+				Symbol:    act.Quantity.Symbol.Symbol,
+			},
+		},
+		Memo: act.Memo,
+	}, nil
 }
