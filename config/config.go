@@ -6,10 +6,11 @@ import (
 
 // ConfigData JSON struct define to config
 type ConfigData struct {
-	ChainID string           `json:"chainId"`
-	URL     string           `json:"url"`
-	Keys    []accountKeyData `json:"keys"`
-	PriKeys []string         `json:"pri"`
+	ChainID  string           `json:"chainId"`
+	StartNum uint32           `json:"startNum"`
+	URL      string           `json:"url"`
+	Keys     []accountKeyData `json:"keys"`
+	PriKeys  []string         `json:"pri"`
 }
 
 // LoadCfgFromFile load cfg from file
