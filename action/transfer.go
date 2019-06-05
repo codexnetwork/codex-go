@@ -2,7 +2,8 @@ package action
 
 import (
 	eos "github.com/eosforce/goforceio"
-	"github.com/fanyang1988/force-go/types"
+
+	"github.com/codexnetwork/codex-go/types"
 )
 
 // TokenAccountName account name for token contact to chain

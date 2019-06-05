@@ -7,7 +7,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/fanyang1988/force-go/config"
+	"github.com/codexnetwork/codex-go/config"
 )
 
 // ClientType chain client type

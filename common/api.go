@@ -2,7 +2,7 @@ package common
 
 import (
 	eos "github.com/eosforce/goforceio"
-	"github.com/fanyang1988/force-go/config"
+	"github.com/codexnetwork/codex-go/config"
 	"github.com/pkg/errors"
 )
 

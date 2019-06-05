@@ -7,9 +7,9 @@ import (
 
 	"github.com/cihub/seelog"
 	eos "github.com/eosforce/goforceio"
-	force "github.com/fanyang1988/force-go"
-	"github.com/fanyang1988/force-go/action"
-	"github.com/fanyang1988/force-go/types"
+	force "github.com/codexnetwork/codex-go"
+	"github.com/codexnetwork/codex-go/action"
+	"github.com/codexnetwork/codex-go/types"
 )
 
 var configPath = flag.String("cfg", "../config.json", "confg file path")

@@ -6,8 +6,8 @@ import (
 	"github.com/eosforce/goforceio/ecc"
 
 	"github.com/cihub/seelog"
-	"github.com/fanyang1988/force-go"
-	"github.com/fanyang1988/force-go/types"
+	"github.com/codexnetwork/codex-go"
+	"github.com/codexnetwork/codex-go/types"
 )
 
 var configPath = flag.String("cfg", "../config.json", "confg file path")

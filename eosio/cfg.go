@@ -6,11 +6,12 @@ import (
 	"github.com/cihub/seelog"
 	eos "github.com/eoscanada/eos-go"
 	"github.com/eoscanada/eos-go/ecc"
-	"github.com/fanyang1988/force-go/config"
 	"github.com/pkg/errors"
+
+	"github.com/codexnetwork/codex-go/config"
 )
 
-// Config config to force-go
+// Config config to codex-go
 type Config struct {
 	ChainID eos.SHA256Bytes
 	URL     string
