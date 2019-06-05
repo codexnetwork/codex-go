@@ -1,19 +1,17 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 
-	"github.com/fanyang1988/force-go/config"
-
-	"github.com/fanyang1988/force-go/common"
-
-	"encoding/json"
-	"fmt"
-
 	"github.com/cihub/seelog"
+
+	gocodex "github.com/codexnetwork/codex-go"
+	"github.com/codexnetwork/codex-go/config"
+	"github.com/codexnetwork/codex-go/types"
 )
 
-var configPath = flag.String("cfg", "../config.json", "confg file path")
+var configPath = flag.String("cfg", "../config.json", "config file path")
 
 func main() {
 	defer seelog.Flush()
@@ -25,13 +23,13 @@ func main() {
 		return
 	}
 
-	api, err := common.NewAPI(cfg)
+	api, err := gocodex.NewClientAPI(types.EOSIO, cfg)
 	if err != nil {
 		seelog.Errorf("create api err by %s", err.Error())
 		return
 	}
 
-	info, err := api.GetInfo()
+	info, err := api.GetInfoData()
 	if err != nil {
 		seelog.Errorf("get api err by %s", err.Error())
 		return
@@ -43,5 +41,5 @@ func main() {
 		return
 	}
 
-	fmt.Println(string(data))
+	seelog.Infof("res info data : %v", string(data))
 }

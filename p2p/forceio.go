@@ -9,7 +9,7 @@ import (
 	"github.com/eosforce/goforceio/p2p"
 	"go.uber.org/zap"
 
-	"github.com/fanyang1988/force-go/types"
+	"github.com/codexnetwork/codex-go/types"
 )
 
 // p2pForceioClient a manager for peers to diff p2p node

@@ -7,10 +7,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/fanyang1988/force-block-ev/log"
-	"github.com/fanyang1988/force-go/p2p"
-	"github.com/fanyang1988/force-go/types"
 	"go.uber.org/zap"
+	"github.com/fanyang1988/force-block-ev/log"
+
+	"github.com/codexnetwork/codex-go/p2p"
+	"github.com/codexnetwork/codex-go/types"
 )
 
 var chainID = flag.String("chain-id", "66b03fd7b1fa2f86afa0bdb408e1261494001b08a3ba16d5093f8d1c3d44f385", "net chainID to connect to")
@@ -33,7 +34,6 @@ type handlerImp struct {
 }
 
 func (h *handlerImp) OnBlock(peer string, msg *types.BlockGeneralInfo) error {
-	log.Logger().Info("on checked block", zap.String("peer", peer), zap.Uint32("num", msg.BlockNum))
 	return nil
 }
 func (h *handlerImp) OnGoAway(peer string, reason uint8, nodeID types.Checksum256) error {

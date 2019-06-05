@@ -1,13 +1,13 @@
-package force
+package gocodex
 
 import (
 	"github.com/pkg/errors"
 
-	"github.com/fanyang1988/force-go/config"
-	eosforceApi "github.com/fanyang1988/force-go/eosforce"
-	eosioApi "github.com/fanyang1988/force-go/eosio"
-	forceioApi "github.com/fanyang1988/force-go/forceio"
-	"github.com/fanyang1988/force-go/types"
+	"github.com/codexnetwork/codex-go/config"
+	eosforceApi "github.com/codexnetwork/codex-go/eosforce"
+	eosioApi "github.com/codexnetwork/codex-go/eosio"
+	forceioApi "github.com/codexnetwork/codex-go/forceio"
+	"github.com/codexnetwork/codex-go/types"
 )
 
 // Client client to forceio chain

@@ -4,8 +4,8 @@ import (
 	eos "github.com/eosforce/goforceio"
 	"github.com/pkg/errors"
 
-	"github.com/fanyang1988/force-go/config"
-	"github.com/fanyang1988/force-go/types"
+	"github.com/codexnetwork/codex-go/config"
+	"github.com/codexnetwork/codex-go/types"
 )
 
 // API client api to forceio chain
