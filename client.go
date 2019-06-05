@@ -1,4 +1,4 @@
-package force
+package gocodex
 
 import (
 	"github.com/pkg/errors"
