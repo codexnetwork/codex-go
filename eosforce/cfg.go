@@ -3,7 +3,6 @@ package eosforce
 import (
 	"encoding/hex"
 
-	"github.com/cihub/seelog"
 	eos "github.com/eosforce/goeosforce"
 	"github.com/eosforce/goeosforce/ecc"
 	"github.com/pkg/errors"
@@ -42,7 +41,7 @@ func (c *Config) Parse(data *config.ConfigData) error {
 		n.PubKey = n.PriKey.PublicKey()
 
 		c.Keys[k.PriKey] = n
-		seelog.Debugf("load account key %s -> %s", n.Name, n.PubKey)
+		//seelog.Debugf("load account key %s -> %s", n.Name, n.PubKey)
 	}
 
 	c.Prikeys = make([]ecc.PrivateKey, 0, len(data.PriKeys)+64)
@@ -52,7 +51,7 @@ func (c *Config) Parse(data *config.ConfigData) error {
 			return errors.Wrapf(err, "parse prikey err")
 		}
 		c.Prikeys = append(c.Prikeys, *pk)
-		seelog.Debugf("load key %s", pk.PublicKey())
+		//seelog.Debugf("load key %s", pk.PublicKey())
 	}
 
 	//chainID
