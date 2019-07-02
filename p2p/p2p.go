@@ -4,8 +4,9 @@ import (
 	"errors"
 	"time"
 
-	"github.com/codexnetwork/codex-go/types"
 	"go.uber.org/zap"
+
+	"github.com/codexnetwork/codex-go/types"
 )
 
 // ClientInterface interface for common p2p client
@@ -38,6 +39,8 @@ func NewP2PClient(typ types.ClientType, params P2PInitParams) ClientInterface {
 	case types.FORCEIO:
 		return NewP2PClient4Forceio(params.Name, params.ClientID, params.StartBlockNum, params.Peers, params.Logger)
 	case types.EOSIO:
+		return NewP2PClient4EOS(params.Name, params.ClientID, params.StartBlockNum, params.Peers, params.Logger)
+	case types.ENU:
 		return NewP2PClient4EOS(params.Name, params.ClientID, params.StartBlockNum, params.Peers, params.Logger)
 	default:
 		panic(errors.New("no support type for p2p"))

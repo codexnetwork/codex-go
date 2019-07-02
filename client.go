@@ -24,6 +24,8 @@ func NewClientAPI(typ types.ClientType, cfg *config.ConfigData) (types.ClientInt
 		res = &forceioApi.API{}
 	case types.EOSIO:
 		res = &eosioApi.API{}
+	case types.ENU:
+		res = &eosioApi.API{}
 	case types.EOSForce:
 		res = &eosforceApi.API{}
 	default:
