@@ -110,11 +110,14 @@ func NewSwitcherInterface(typ ClientType) SwitcherInterface {
 		return &switcher2FORCEIO{}
 	case EOSIO:
 		return &switcher2EOSIO{}
+	case ENU:
+		return &switcher2EOSIO{}
 	case EOSForce:
 		return &switcher2EOSForce{}
 	default:
 		panic(ErrNoSupportChain)
 	}
+	return nil
 }
 
 var (
